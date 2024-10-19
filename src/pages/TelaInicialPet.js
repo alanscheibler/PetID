@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import cores from '../styles/colors'; 
 import { useNavigation } from '@react-navigation/native';
 import PIDHeader from '../components/PIDHeader';
 import PIDFooterBar from '../components/PIDFooterBar';
 
 import mapIcon from '../assets/icon/map.png'; 
 import addPetIcon from '../assets/icon/addPet.png';
+import cores from '../styles/colors'; 
 
 export default function TelaInicialPet() {
     const navigation = useNavigation();
@@ -30,7 +30,10 @@ export default function TelaInicialPet() {
         </Text>
       </View>
 
-      <PIDFooterBar leftIcon={mapIcon} rightIcon={addPetIcon}/>
+      <PIDFooterBar 
+        rightIcon={addPetIcon}
+        onRightIconPress={handleAddPetPress}
+      />
 
     </View>
   );

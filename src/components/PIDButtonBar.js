@@ -1,11 +1,6 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import React from 'react'
 
-
-import mapIcon from '../assets/icon/map.png'; 
-import addPetIcon from '../assets/icon/addPet.png';
-import backIcon from '../assets/icon/back.png';
-
 import colors from '../styles/colors'
 
 export default function PIDButtonBar({icon, onPress}) {

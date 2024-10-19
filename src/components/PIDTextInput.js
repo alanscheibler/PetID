@@ -44,4 +44,5 @@ const styles = StyleSheet.create({
         borderWidth: 1, 
         borderColor: colors.colors.green,
     }
+    
 });
