@@ -3,10 +3,6 @@ import React from 'react'
 import PIDButtonBar from './PIDButtonBar'
 import colors from '../styles/colors'
 
-import mapIcon from '../assets/icon/map.png'; 
-import addPetIcon from '../assets/icon/addPet.png';
-import backIcon from '../assets/icon/back.png';
-
 export default function PIDFooterBar({leftIcon, rightIcon}) {
   return (
     <View style={styles.bar}>

@@ -2,11 +2,14 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import cores from '../styles/colors'; // Assumindo que você tem um arquivo de cores já definido
 import PIDButton from '../components/PIDButton'; // Botão que você já criou
+<<<<<<< HEAD
 import PIDFooterBar from '../components/PIDFooterBar';
 
 import mapIcon from '../assets/icon/map.png'; 
 import addPetIcon from '../assets/icon/addPet.png';
 import backIcon from '../assets/icon/back.png';
+=======
+>>>>>>> 4f36f02e0d2764306e67ad243169cf12b4e250f8
 
 export default function TelaInicialPet() {
 
@@ -34,7 +37,16 @@ export default function TelaInicialPet() {
         </Text>
       </View>
 
+<<<<<<< HEAD
       <PIDFooterBar leftIcon={mapIcon} rightIcon={addPetIcon}/>
+=======
+      {/* Botões na parte inferior */}
+      <View style={estilos.barraInferior}>
+        <PIDButton title="Home" icon="home" onPress={() => {/* Ação ao pressionar */}} />
+        <PIDButton title="Adicionar" icon="plus" onPress={() => {/* Ação ao pressionar */}} />
+      </View>
+
+>>>>>>> 4f36f02e0d2764306e67ad243169cf12b4e250f8
     </View>
   );
 }
