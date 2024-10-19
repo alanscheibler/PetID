@@ -26,12 +26,16 @@ export default function TelaInicialPet() {
         </Text>
       </View>
 
-      <PIDFooterBar 
-      leftIcon={mapIcon}  
-      rightIcon={addPetIcon}
-      rightAction={() => navigation.navigate('RegisterPet')}
-      />
+<<<<<<< HEAD
+      <PIDFooterBar leftIcon={mapIcon} rightIcon={addPetIcon}/>
+=======
+      {/* Botões na parte inferior */}
+      <View style={estilos.barraInferior}>
+        <PIDButton title="Home" icon="home" onPress={() => {/* Ação ao pressionar */}} />
+        <PIDButton title="Adicionar" icon="plus" onPress={() => {/* Ação ao pressionar */}} />
+      </View>
 
+>>>>>>> 4f36f02e0d2764306e67ad243169cf12b4e250f8
     </View>
   );
 }
