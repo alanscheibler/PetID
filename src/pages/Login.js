@@ -23,7 +23,9 @@ export default function Login() {
             
             <View style={styles.rowContainer}>
               <PIDTextLink title= 'Esqueci minha senha'/>
-              <PIDButton title = "Entrar"/>
+              <PIDButton title = "Entrar"
+              onPress={() => navigation.navigate('TelaInicialPet')}
+              />
             </View>
 
             <View style={styles.footerContainer}>
