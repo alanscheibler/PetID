@@ -8,9 +8,9 @@ import backIcon from '../assets/icon/back.png';
 
 import colors from '../styles/colors'
 
-export default function PIDButtonBar({icon}) {
+export default function PIDButtonBar({icon, onPress}) {
   return (
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={onPress}>
         <Image source={icon} style={styles.icon}/>
       </TouchableOpacity> 
   )
