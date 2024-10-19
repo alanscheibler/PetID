@@ -2,8 +2,9 @@ import { StyleSheet, TextInput, View } from 'react-native';
 import React, { useState } from 'react';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default function PITextInput({...rest}) {
+export default function PIDTextInput({...rest}) {
     const [isFocused, setIsFocused] = useState(false); 
 
     return (

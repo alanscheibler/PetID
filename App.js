@@ -9,6 +9,7 @@ import Login from './src/pages/Login';
 import Register from './src/pages/Register';
 import TelaInicialPet from './src/pages/TelaInicialPet';
 import User from './src/pages/User';
+import RegisterPet from './src/pages/RegisterPet';
 
 // Mantendo a splash screen visível até que as fontes sejam carregadas
 SplashScreen.preventAutoHideAsync();
@@ -63,6 +64,11 @@ export default function App() {
         <Stack.Screen
           name='User' 
           component={User}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='RegisterPet' 
+          component={RegisterPet}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

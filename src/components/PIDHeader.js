@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import colors from '../styles/colors';
 
 export default function PIDHeader({ onProfilePress }) {
   return (
@@ -28,6 +29,7 @@ const estilos = StyleSheet.create({
     justifyContent: 'center', 
     backgroundColor: '#fff', 
     elevation: 2, 
+    backgroundColor: colors.colors.componentBG
   },
   iconePata: {
     width: 50,

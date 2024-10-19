@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import cores from '../styles/colors'; 
 import { useNavigation } from '@react-navigation/native';
-import Header from '../components/PIDHeader';
+import PIDHeader from '../components/PIDHeader';
 import PIDFooterBar from '../components/PIDFooterBar';
 
 import mapIcon from '../assets/icon/map.png'; 
@@ -13,12 +13,16 @@ export default function TelaInicialPet() {
 
     const handleProfilePress = () => {
         navigation.navigate('User');
-      };
+    };
+    
+    const handleAddPetPress = () => {
+        navigation.navigate('RegisterPet'); 
+    };
 
   return (
     <View style={estilos.container}>
         
-      <Header onProfilePress={handleProfilePress} />
+      <PIDHeader onProfilePress={handleProfilePress} />
 
       <View style={estilos.mensagemCentral}>
         <Text style={estilos.texto}>
@@ -26,7 +30,11 @@ export default function TelaInicialPet() {
         </Text>
       </View>
 
-      <PIDFooterBar leftIcon={mapIcon} rightIcon={addPetIcon}/>
+      <PIDFooterBar 
+        leftIcon={mapIcon} 
+        rightIcon={addPetIcon}
+        onRightIconPress={handleAddPetPress}
+        />
 
     </View>
   );
