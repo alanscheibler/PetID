@@ -1,13 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import cores from '../styles/colors'; // Assumindo que você tem um arquivo de cores já definido
+import cores from '../styles/colors'; 
 import { useNavigation } from '@react-navigation/native';
 import Header from '../components/PIDHeader';
 import PIDFooterBar from '../components/PIDFooterBar';
 
 import mapIcon from '../assets/icon/map.png'; 
 import addPetIcon from '../assets/icon/addPet.png';
-import backIcon from '../assets/icon/back.png';
 
 export default function TelaInicialPet() {
     const navigation = useNavigation();
@@ -19,7 +18,6 @@ export default function TelaInicialPet() {
   return (
     <View style={estilos.container}>
         
-
       <Header onProfilePress={handleProfilePress} />
 
       <View style={estilos.mensagemCentral}>
