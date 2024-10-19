@@ -3,11 +3,11 @@ import React from 'react'
 import PIDButtonBar from './PIDButtonBar'
 import colors from '../styles/colors'
 
-export default function PIDFooterBar({leftIcon, rightIcon, onRightIconPress}) {
+export default function PIDFooterBar({leftIcon, rightIcon}) {
   return (
     <View style={styles.bar}>
       <PIDButtonBar icon={leftIcon}/>
-      <PIDButtonBar icon={rightIcon} onPress={onRightIconPress} />
+      <PIDButtonBar icon={rightIcon}/>
     </View>
   )
 }

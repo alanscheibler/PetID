@@ -30,11 +30,7 @@ export default function TelaInicialPet() {
         </Text>
       </View>
 
-      <PIDFooterBar 
-        leftIcon={mapIcon} 
-        rightIcon={addPetIcon}
-        onRightIconPress={handleAddPetPress}
-        />
+      <PIDFooterBar leftIcon={mapIcon} rightIcon={addPetIcon}/>
 
     </View>
   );

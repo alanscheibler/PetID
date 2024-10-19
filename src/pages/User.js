@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, TouchableWithoutFeedback, ScrollView, View, Keyboard, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 
 import colors from '../styles/colors';
-import PIDTextInput from '../components/PIDTextInput';
 import PIDButton from '../components/PIDButton';
 
 export default function User() {
@@ -15,7 +13,6 @@ export default function User() {
   const [email, setEmail] = useState('');
   const [cpf, setCpf] = useState('');
   const [telefone, setTelefone] = useState(''); 
-  const [endereco, setEndereco] = useState(''); 
   const [senha, setSenha] = useState(''); 
   const [fotoPerfil, setFotoPerfil] = useState(null); 
 
@@ -42,58 +39,76 @@ export default function User() {
 
   return (
     <ScrollView style={styles.scrollContainer}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.container}>
-          <StatusBar style="auto" />
-          
+      <View style={styles.container}>
+
+        <TouchableOpacity onPress={alterarFotoPerfil}>
           <Image 
-            source={fotoPerfil ? { uri: fotoPerfil } : require('../assets/img/cadastro.png')} // Exibe a foto ou uma imagem padrão
+            source={fotoPerfil ? { uri: fotoPerfil } : require('../assets/img/cadastro.png')} // Se a fotoPerfil estiver disponível, mostra a nova foto
             style={styles.image} 
           />
+        </TouchableOpacity>
 
-          <PIDTextInput placeholder='Nome' value={nome} onChangeText={setNome} />
-          <PIDTextInput placeholder='E-mail' value={email} onChangeText={setEmail} keyboardType="email-address" iconName="pencil"/>
-          <PIDTextInput placeholder='CPF' value={cpf} onChangeText={setCpf} keyboardType="numeric" />
-          <PIDTextInput placeholder='Telefone' value={telefone} onChangeText={setTelefone} keyboardType="phone-pad" />
-          <PIDTextInput placeholder='Endereço' value={endereco} onChangeText={setEndereco} keyboardType="default" />
-          <PIDTextInput placeholder='Senha' value={senha} onChangeText={setSenha} secureTextEntry />
+        <TextInput
+          style={styles.input}
+          placeholder="Nome"
+          value={nome}
+          onChangeText={setNome}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="E-mail"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="CPF"
+          value={cpf}
+          onChangeText={setCpf}
+          keyboardType="numeric"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Telefone"
+          value={telefone}
+          onChangeText={setTelefone}
+          keyboardType="phone-pad"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Senha"
+          value={senha}
+          onChangeText={setSenha}
+          secureTextEntry
+        />
 
-          <View style={styles.buttonContainer}>
-            <PIDButton 
-            title='Adicionar Foto' 
+        <PIDButton 
+            title='Alterar Foto' 
             outline={true} 
-            size='big'
-            onPress={alterarFotoPerfil}
-            />
-            </View>
+            onPress={alterarFotoPerfil} 
+            style={styles.largeButton}
+        />
 
-          <View style={styles.rowContainer}>
-              <PIDButton title='Cancelar' outline={true} onPress={cancelarAlteracoes} />
-              <PIDButton title='Salvar' onPress={salvarDados} />
-          </View>
-
+        <View style={styles.rowContainer}>
+          <PIDButton title='Cancelar' outline={true} onPress={cancelarAlteracoes} />
+          <PIDButton title='Salvar' onPress={salvarDados} />
         </View>
-      </TouchableWithoutFeedback>
+
+      </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    backgroundColor: colors.colors.background,
+    paddingVertical: 30,
+  },
   container: {
     flex: 1,
     alignItems: 'center',
-  },
-  scrollContainer: {
-    backgroundColor: colors.colors.background,
-    paddingVertical: 104
-  },
-  rowContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-    paddingHorizontal: 70,
-    marginTop: 20,
+    paddingHorizontal: 20,
   },
   image: {
     width: 100,
@@ -102,8 +117,30 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     marginVertical: 20,
   },
-  buttonContainer: {
+  text: {
+    fontSize: 14,
+    color: colors.colors.primary,
+    marginBottom: 20,
+  },
+  input: {
     width: '100%',
-    paddingHorizontal: 64,
+    height: 50,
+    borderColor: colors.colors.primary,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginBottom: 20,
+    fontSize: 16,
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 20,
+    marginTop: 20,
+  },
+  largeButton: {
+    width: '300%', 
+    marginBottom: 20, 
   },
 });
