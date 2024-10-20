@@ -19,6 +19,7 @@ export default function User() {
   const [endereco, setEndereco] = useState('');
   const [senha, setSenha] = useState('');
   const [editableField, setEditableField] = useState(null);
+  const [showPassword, setShowPassword] = useState(false); 
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'usuario'), (snapshot) => {
@@ -182,10 +183,16 @@ export default function User() {
               <PIDTextInput 
                 placeholder='Senha' 
                 value={senha} 
-                secureTextEntry={true} 
+                secureTextEntry={!showPassword} // Usa o estado para mostrar/esconder a senha
                 editable={editableField === 'senha'} 
                 onChangeText={setSenha}
               />
+              <TouchableWithoutFeedback onPress={() => setShowPassword(!showPassword)}>
+                <Image 
+                  source={require('../assets/icon/Eye.png')} // Ícone para mostrar/esconder a senha
+                  style={styles.icon} 
+                />
+              </TouchableWithoutFeedback>
               {editableField !== 'senha' && (
                 <TouchableWithoutFeedback onPress={() => handleEdit('senha')}>
                   <Image 

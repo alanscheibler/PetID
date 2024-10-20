@@ -4,6 +4,8 @@ import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase/firebaseConnection'; 
+import { auth } from '../firebase/firebaseConnection';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 import colors from '../styles/colors';
 import PIDTextInput from '../components/PIDTextInput';
@@ -21,23 +23,26 @@ export default function Register() {
   const [endereco, setEndereco] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
-  
+
   const handleRegister = async () => {
     if (senha !== confirmarSenha) {
       Alert.alert("As senhas não coincidem!");
       return;
     }
-
+  
     try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
+      const user = userCredential.user;
+  
       await addDoc(collection(db, "usuario"), {
         nome,
         email,
         cpf,
         telefone,
         endereco,
-        senha 
+        uid: user.uid, 
       });
-
+  
       Alert.alert("Cadastro realizado com sucesso!");
       navigation.navigate('Login');
     } catch (error) {
