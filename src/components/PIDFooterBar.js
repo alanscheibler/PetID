@@ -1,19 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
 import React from 'react'
 import PIDButtonBar from './PIDButtonBar'
 import colors from '../styles/colors'
 
-export default function PIDFooterBar({leftIcon, rightIcon, leftAction, rightAction}) {
+export default function PIDFooterBar({leftIcon, leftAction, rightIcon, rightAction}) {
   return (
     <View style={styles.bar}>
-      <PIDButtonBar 
-        icon={leftIcon}
-        onPress={leftAction}
-      />
-      <PIDButtonBar 
-      icon={rightIcon}
-      onPress={rightAction}
-      />
+      <PIDButtonBar icon={leftIcon} onPress={leftAction}/>
+      <PIDButtonBar icon={rightIcon} onPress={rightAction}/>
     </View>
   )
 }

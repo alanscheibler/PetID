@@ -1,11 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, TouchableWithoutFeedback, ScrollView, View, Keyboard, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+
 import React, { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
-
-
-import colors from '../styles/colors';
+import {globalStyles} from '../styles/globalStyles';
 
 import PIDTextInput from '../components/PIDTextInput';
 import PIDButton from '../components/PIDButton';
@@ -14,6 +13,9 @@ import PIDCheckMarker from '../components/PIDCheckMarker';
 export default function RegisterPet() {
 
   const navigation = useNavigation();
+  const onCancellPress = () => navigation.navigate('TelaInicialPet') 
+  const onRegisterPress = () => navigation.navigate('TelaInicialPet') 
+
   const [fotoPerfil, setFotoPerfil] = useState(null);
 
   const alterarFotoPerfil = async () => {
@@ -26,14 +28,14 @@ export default function RegisterPet() {
 };
 
   return (
-    <ScrollView style={styles.scrollContainer}>
+    <ScrollView style={globalStyles.scrollContainer}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.container}>
+        <View style={globalStyles.container}>
           <StatusBar style="auto" />
           
           <Image 
             source={require('../assets/img/LogoTitulo.png')}
-            style={styles.image} 
+            style={globalStyles.image} 
           />
 
           <PIDTextInput placeholder='Nome' />
@@ -41,59 +43,28 @@ export default function RegisterPet() {
           <PIDTextInput placeholder='Raça' />
           <PIDTextInput placeholder='Data de nascimento' />
           <PIDTextInput placeholder='Sexo' />
-          <View style={styles.rowContainer}>
+
+          <View style={globalStyles.rowContainer}>
             <PIDCheckMarker title='Pet castrado' />
           </View>
-          <View style={styles.buttonContainer}>
-            <PIDButton 
-            title='Adicionar Foto' 
-            outline={true} 
-            size='big'
-            onPress={alterarFotoPerfil}
-            />
+
+          <View style={globalStyles.rowContainer}>
+              <PIDButton 
+                title='Alterar Foto' 
+                outline={true} 
+                onPress={alterarFotoPerfil} 
+                size='big'
+              />
+          </View> 
+          
+          <View style={globalStyles.rowContainer}>
+              <PIDButton title='Cancelar' outline={true} onPress={onCancellPress}/>
+              <PIDButton title='Registrar' onPress={onRegisterPress}/>
           </View>
           
-
-          <View style={styles.rowContainer}>
-              <PIDButton title='Cancelar' outline={true} onPress={() => navigation.navigate('Login')}/>
-              <PIDButton title='Registrar' onPress={() => navigation.navigate('Login')}/>
-          </View>
-          
-
         </View>
         
       </TouchableWithoutFeedback>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  containerLeft: {
-    alignSelf: 'flex-start', 
-    marginLeft: 64,
-  },
-  scrollContainer: {
-    backgroundColor: colors.colors.background,
-    paddingVertical: 104,
-  },
-  rowContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-    paddingHorizontal: 64,
-  },
-  buttonContainer: {
-    width: '100%',
-    paddingHorizontal: 64,
-  },
-  image: {
-    width: 100,
-    height: 100,
-    resizeMode: 'contain',
-  },
-});

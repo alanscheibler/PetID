@@ -8,8 +8,9 @@ import * as Font from 'expo-font';
 import Login from './src/pages/Login';
 import Register from './src/pages/Register';
 import TelaInicialPet from './src/pages/TelaInicialPet';
+import User from './src/pages/User';
+import RegisterPet from './src/pages/RegisterPet';
 
-// Mantendo a splash screen visível até que as fontes sejam carregadas
 SplashScreen.preventAutoHideAsync();
 
 const Stack = createNativeStackNavigator();
@@ -20,7 +21,7 @@ export default function App() {
 
   useEffect(() => {
     async function loadFonts() {
-      // Carrega as fontes personalizadas
+  
       await Font.loadAsync({
         'Signika-Bold': require('./src/assets/fonts/Signika-Bold.ttf'),
         'Signika-Regular': require('./src/assets/fonts/Signika-Regular.ttf'),
@@ -57,6 +58,16 @@ export default function App() {
         <Stack.Screen
           name='TelaInicialPet' 
           component={TelaInicialPet}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='User' 
+          component={User}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='RegisterPet' 
+          component={RegisterPet}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

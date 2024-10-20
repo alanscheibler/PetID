@@ -6,5 +6,4 @@ const colors = {
     text: '#31543B'
     };
 
-    export default {
-        colors};
+export default {colors};
