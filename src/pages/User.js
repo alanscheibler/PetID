@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, TouchableWithoutFeedback, ScrollView, View, Keyboard, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, TouchableWithoutFeedback, View, Keyboard, Image, FlatList, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
+import { db } from '../firebase/firebaseConnection'; // ajuste o caminho conforme necessário
+import { collection, onSnapshot } from 'firebase/firestore';
 import * as ImagePicker from 'expo-image-picker';
 import colors from '../styles/colors';
 import PIDTextInput from '../components/PIDTextInput';
@@ -17,7 +17,39 @@ export default function User() {
   const [telefone, setTelefone] = useState(''); 
   const [endereco, setEndereco] = useState(''); 
   const [senha, setSenha] = useState(''); 
-  const [fotoPerfil, setFotoPerfil] = useState(null); 
+  const [fotoPerfil, setFotoPerfil] = useState(null);
+
+  const [usuario, setUsuario] = setState([]);
+
+  useEffect(() => {
+
+    async function getDados() {
+
+      const usuarioRef = collection(db, "usuario");
+      onSnapshot(usuarioRef, (snapshot) => {
+        let lista = [];
+
+        snapshot.forEach((doc) => {
+          lista.push({
+            id: doc.id,
+            nome: doc.data().nome,
+            email: doc.data().email,
+            cpf: doc.data().cpf,
+            telefone: doc.data().telefone,
+            endereco: doc.data().endereco,
+            senha: doc.data().senha,
+            fotoPerfil: doc.data().fotoPerfil
+          })
+        })
+
+        setUsuario(lista);
+      })      
+      .catch((err) =>{
+        console.log(err)
+      })
+    }
+    getDados();
+  }), [] 
 
   const alterarFotoPerfil = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -40,11 +72,9 @@ export default function User() {
   };
 
   return (
-    <ScrollView style={styles.scrollContainer}>
+    <View style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.container}>
-          <StatusBar style="auto" />
-
+        <>
           <Image 
             source={fotoPerfil ? { uri: fotoPerfil } : require('../assets/img/cadastro.png')} 
             style={styles.image} 
@@ -58,7 +88,7 @@ export default function User() {
           <PIDTextInput placeholder='Senha' value={senha} onChangeText={setSenha} secureTextEntry />
 
           <View style={styles.buttonContainer}>
-          <PIDButton 
+            <PIDButton 
               title='Alterar Foto' 
               outline={true} 
               onPress={alterarFotoPerfil} 
@@ -67,13 +97,25 @@ export default function User() {
           </View>  
 
           <View style={styles.rowContainer}>
-              <PIDButton title='Cancelar' outline={true} onPress={cancelarAlteracoes} />
-              <PIDButton title='Salvar' onPress={salvarDados} />
+            <PIDButton title='Cancelar' outline={true} onPress={cancelarAlteracoes} />
+            <PIDButton title='Salvar' onPress={salvarDados} />
           </View>
 
-        </View>
+          <Text style={styles.title}>Usuários Cadastrados:</Text>
+          <FlatList
+            data={usuarios}
+            keyExtractor={item => item.id}
+            renderItem={({ item }) => (
+              <View style={styles.userItem}>
+                <Text>{item.nome}</Text>
+                <Text>{item.email}</Text>
+                <Text>{item.telefone}</Text>
+              </View>
+            )}
+          />
+        </>
       </TouchableWithoutFeedback>
-    </ScrollView>
+    </View>
   );
 }
 
@@ -81,10 +123,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-  },
-  scrollContainer: {
     backgroundColor: colors.colors.background,
-    paddingVertical: 104
+    paddingVertical: 104,
   },
   rowContainer: {
     flexDirection: 'row',
@@ -104,5 +144,16 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: '100%',
     paddingHorizontal: 64,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginVertical: 20,
+  },
+  userItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderColor: colors.colors.border,
+    width: '100%',
   },
 });
