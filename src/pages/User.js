@@ -59,8 +59,8 @@ export default function User() {
         cpf,
         telefone,
         endereco,
-        senha
       });
+      
       Alert.alert('Dados atualizados com sucesso!');
       setEditableField(null); 
     } catch (error) {
