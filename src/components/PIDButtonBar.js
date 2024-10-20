@@ -5,7 +5,7 @@ import colors from '../styles/colors'
 
 export default function PIDButtonBar({icon, onPress}) {
   return (
-      <TouchableOpacity style={styles.button} onPress={onPress}>
+      <TouchableOpacity style={styles.button}>
         <Image source={icon} style={styles.icon}/>
       </TouchableOpacity> 
   )

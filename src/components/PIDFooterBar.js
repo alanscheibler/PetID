@@ -9,8 +9,7 @@ export default function PIDFooterBar({leftIcon, leftAction, rightIcon, rightActi
       <PIDButtonBar icon={leftIcon} onPress={leftAction}/>
       <PIDButtonBar icon={rightIcon} onPress={rightAction}/>
     </View>
-  )
-}
+  )};
 
 const styles = StyleSheet.create({
     bar: {
