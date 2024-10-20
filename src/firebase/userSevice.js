@@ -44,40 +44,5 @@ export default function userSevice() {
     getDados();
   }), []
 
-  async function handleRegister(){
-    await addDoc(collection(db, "usuario"), {
-      nome: nome,
-      email: email,
-      cpf: cpf,
-      telefone: telefone,
-      endereco: endereco,
-      senha: senha,
-      fotoPerfil: fotoPerfil
-    })
-    .then(() => {
-      console.log("CADASTRO COM SUCESSO")
-      setNome("")
-      setEmail("")
-      setCpf("")
-      setTelefone("")
-      setEndereco("")
-      setSenha("")
-      setFotoPerfil(null)
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-  }
-
-  function editUsuario(data){
-    setNome(data.nome);
-    setEmail(data.email);
-    setCpf(data.cpf);
-    setTelefone(data.telefone);
-    setEndereco(data.endereco);
-    setSenha(data.senha);
-    setFotoPerfil(data.fotoPerfil);
-  }
-
 
 }

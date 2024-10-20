@@ -1,55 +1,41 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TouchableWithoutFeedback, View, Keyboard, Image, FlatList, Text } from 'react-native';
+import { StyleSheet, TouchableWithoutFeedback, View, Keyboard, Image, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { db } from '../firebase/firebaseConnection'; // ajuste o caminho conforme necessário
-import { collection, onSnapshot } from 'firebase/firestore';
-import * as ImagePicker from 'expo-image-picker';
+import { db } from '../firebase/firebaseConnection'; 
+import { collection, onSnapshot, doc, updateDoc } from 'firebase/firestore';
 import colors from '../styles/colors';
 import PIDTextInput from '../components/PIDTextInput';
 import PIDButton from '../components/PIDButton';
+import * as ImagePicker from 'expo-image-picker'; 
 
 export default function User() {
   const navigation = useNavigation();
 
+  const [usuario, setUsuario] = useState(null);
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [cpf, setCpf] = useState('');
-  const [telefone, setTelefone] = useState(''); 
-  const [endereco, setEndereco] = useState(''); 
-  const [senha, setSenha] = useState(''); 
-  const [fotoPerfil, setFotoPerfil] = useState(null);
-
-  const [usuario, setUsuario] = setState([]);
+  const [telefone, setTelefone] = useState('');
+  const [endereco, setEndereco] = useState('');
+  const [senha, setSenha] = useState('');
+  const [editableField, setEditableField] = useState(null);
 
   useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'usuario'), (snapshot) => {
+      const userData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      if (userData.length > 0) {
+        setUsuario(userData[0]);
+        setNome(userData[0].nome);
+        setEmail(userData[0].email);
+        setCpf(userData[0].cpf);
+        setTelefone(userData[0].telefone);
+        setEndereco(userData[0].endereco);
+        setSenha(userData[0].senha);
+      }
+    });
 
-    async function getDados() {
-
-      const usuarioRef = collection(db, "usuario");
-      onSnapshot(usuarioRef, (snapshot) => {
-        let lista = [];
-
-        snapshot.forEach((doc) => {
-          lista.push({
-            id: doc.id,
-            nome: doc.data().nome,
-            email: doc.data().email,
-            cpf: doc.data().cpf,
-            telefone: doc.data().telefone,
-            endereco: doc.data().endereco,
-            senha: doc.data().senha,
-            fotoPerfil: doc.data().fotoPerfil
-          })
-        })
-
-        setUsuario(lista);
-      })      
-      .catch((err) =>{
-        console.log(err)
-      })
-    }
-    getDados();
-  }), [] 
+    return () => unsubscribe();
+  }, []);
 
   const alterarFotoPerfil = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -63,59 +49,178 @@ export default function User() {
     }
   };
 
-  const salvarDados = () => {
-    console.log('Dados salvos:', { nome, email, cpf, telefone, senha });
+  const salvarDados = async () => {
+    try {
+      const userRef = doc(db, 'usuario', usuario.id);
+      await updateDoc(userRef, {
+        nome,
+        email,
+        cpf,
+        telefone,
+        endereco,
+        senha
+      });
+      Alert.alert('Dados atualizados com sucesso!');
+      setEditableField(null); 
+    } catch (error) {
+      console.error("Erro ao atualizar os dados: ", error);
+      Alert.alert('Erro', 'Não foi possível atualizar os dados.');
+    }
   };
 
   const cancelarAlteracoes = () => {
-    navigation.goBack();
+    setEditableField(null);
+    setNome(usuario.nome);
+    setEmail(usuario.email);
+    setCpf(usuario.cpf);
+    setTelefone(usuario.telefone);
+    setEndereco(usuario.endereco);
+    setSenha(usuario.senha);
+    navigation.navigate('TelaInicialPet');
+  };
+
+  const handleEdit = (field) => {
+    setEditableField(field);
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <>
-          <Image 
-            source={fotoPerfil ? { uri: fotoPerfil } : require('../assets/img/cadastro.png')} 
-            style={styles.image} 
-          />
-
-          <PIDTextInput placeholder='Nome' value={nome} onChangeText={setNome} />
-          <PIDTextInput placeholder='E-mail' value={email} onChangeText={setEmail} keyboardType="email-address" />
-          <PIDTextInput placeholder='CPF' value={cpf} onChangeText={setCpf} keyboardType="numeric" />
-          <PIDTextInput placeholder='Telefone' value={telefone} onChangeText={setTelefone} keyboardType="phone-pad" />
-          <PIDTextInput placeholder='Endereço' value={endereco} onChangeText={setEndereco} keyboardType="default" />
-          <PIDTextInput placeholder='Senha' value={senha} onChangeText={setSenha} secureTextEntry />
-
-          <View style={styles.buttonContainer}>
-            <PIDButton 
-              title='Alterar Foto' 
-              outline={true} 
-              onPress={alterarFotoPerfil} 
-              size='big'
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        {usuario && (
+          <>
+            <Image 
+              source={require('../assets/img/cadastro.png')} 
+              style={styles.image} 
             />
-          </View>  
 
-          <View style={styles.rowContainer}>
-            <PIDButton title='Cancelar' outline={true} onPress={cancelarAlteracoes} />
-            <PIDButton title='Salvar' onPress={salvarDados} />
-          </View>
+            <View style={styles.inputContainer}>
+              <PIDTextInput 
+                placeholder='Nome' 
+                value={nome} 
+                editable={editableField === 'nome'} 
+                onChangeText={setNome}
+              />
+              {editableField !== 'nome' && (
+                <TouchableWithoutFeedback onPress={() => handleEdit('nome')}>
+                  <Image 
+                    source={require('../assets/icon/Pencil.png')} 
+                    style={styles.icon} 
+                  />
+                </TouchableWithoutFeedback>
+              )}
+            </View>
 
-          <Text style={styles.title}>Usuários Cadastrados:</Text>
-          <FlatList
-            data={usuarios}
-            keyExtractor={item => item.id}
-            renderItem={({ item }) => (
-              <View style={styles.userItem}>
-                <Text>{item.nome}</Text>
-                <Text>{item.email}</Text>
-                <Text>{item.telefone}</Text>
-              </View>
-            )}
-          />
-        </>
-      </TouchableWithoutFeedback>
-    </View>
+            <View style={styles.inputContainer}>
+              <PIDTextInput 
+                placeholder='E-mail' 
+                value={email} 
+                editable={editableField === 'email'} 
+                onChangeText={setEmail}
+              />
+              {editableField !== 'email' && (
+                <TouchableWithoutFeedback onPress={() => handleEdit('email')}>
+                  <Image 
+                    source={require('../assets/icon/Pencil.png')} 
+                    style={styles.icon} 
+                  />
+                </TouchableWithoutFeedback>
+              )}
+            </View>
+
+            <View style={styles.inputContainer}>
+              <PIDTextInput 
+                placeholder='CPF' 
+                value={cpf} 
+                editable={editableField === 'cpf'} 
+                onChangeText={setCpf}
+              />
+              {editableField !== 'cpf' && (
+                <TouchableWithoutFeedback onPress={() => handleEdit('cpf')}>
+                  <Image 
+                    source={require('../assets/icon/Pencil.png')} 
+                    style={styles.icon} 
+                  />
+                </TouchableWithoutFeedback>
+              )}
+            </View>
+
+            <View style={styles.inputContainer}>
+              <PIDTextInput 
+                placeholder='Telefone' 
+                value={telefone} 
+                editable={editableField === 'telefone'} 
+                onChangeText={setTelefone}
+              />
+              {editableField !== 'telefone' && (
+                <TouchableWithoutFeedback onPress={() => handleEdit('telefone')}>
+                  <Image 
+                    source={require('../assets/icon/Pencil.png')} 
+                    style={styles.icon} 
+                  />
+                </TouchableWithoutFeedback>
+              )}
+            </View>
+
+            <View style={styles.inputContainer}>
+              <PIDTextInput 
+                placeholder='Endereço' 
+                value={endereco} 
+                editable={editableField === 'endereco'} 
+                onChangeText={setEndereco}
+              />
+              {editableField !== 'endereco' && (
+                <TouchableWithoutFeedback onPress={() => handleEdit('endereco')}>
+                  <Image 
+                    source={require('../assets/icon/Pencil.png')} 
+                    style={styles.icon} 
+                  />
+                </TouchableWithoutFeedback>
+              )}
+            </View>
+
+            <View style={styles.inputContainer}>
+              <PIDTextInput 
+                placeholder='Senha' 
+                value={senha} 
+                secureTextEntry={true} 
+                editable={editableField === 'senha'} 
+                onChangeText={setSenha}
+              />
+              {editableField !== 'senha' && (
+                <TouchableWithoutFeedback onPress={() => handleEdit('senha')}>
+                  <Image 
+                    source={require('../assets/icon/Pencil.png')} 
+                    style={styles.icon} 
+                  />
+                </TouchableWithoutFeedback>
+              )}
+            </View>
+
+            <View style={styles.buttonContainer}>
+              <PIDButton 
+                title='Alterar Foto' 
+                outline={true} 
+                onPress={alterarFotoPerfil} 
+                size='big'
+              />
+            </View>  
+
+            <View style={styles.buttonContainer}>
+              <PIDButton 
+                title='Cancelar' 
+                onPress={cancelarAlteracoes} 
+                outline={true}
+              />
+              <PIDButton 
+                title='Salvar' 
+                onPress={salvarDados} 
+                outline={true}
+              />
+            </View>  
+          </>
+        )}
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -126,14 +231,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.colors.background,
     paddingVertical: 104,
   },
-  rowContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-    paddingHorizontal: 64,
-    marginTop: 20,
-  },
   image: {
     width: 100,
     height: 100,
@@ -141,19 +238,23 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     marginVertical: 20,
   },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    paddingHorizontal: 64,
+    marginTop: 10, 
+  },
+  icon: {
+    width: 20,
+    height: 20,
+    marginLeft: 5, 
+  },
   buttonContainer: {
     width: '100%',
     paddingHorizontal: 64,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginVertical: 20,
-  },
-  userItem: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderColor: colors.colors.border,
-    width: '100%',
+    marginTop: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
