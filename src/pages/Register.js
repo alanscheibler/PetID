@@ -7,8 +7,6 @@ import { db } from '../firebase/firebaseConnection';
 import { auth } from '../firebase/firebaseConnection';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
-
-
 import {globalStyles} from '../styles/globalStyles';
 import PIDTextInput from '../components/PIDTextInput';
 import PIDButton from '../components/PIDButton';

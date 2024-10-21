@@ -26,7 +26,7 @@ export default function Login() {
         email: user.user.email,
         uid: user.user.uid
       })
-      //navigation.navigate('TelaInicialPet');
+      //navigation.navigate('TelaInicialPet');  NÃO DELETAR, PERTENCE AO FIREBASE // ENTRA COM LOGIN PRONTO
     })
     .catch(err => {
       if(err.code === "auth/missing-password"){
@@ -48,7 +48,7 @@ export default function Login() {
             <View style={globalStyles.rowContainer}>
               <PIDTextLink title= 'Esqueci minha senha'/>
               <PIDButton title = "Entrar"
-              //onPress={handleLogin}
+              //onPress={handleLogin} NÃO DELETAR, PERTENCE AO FIREBASE // ENTRA COM LOGIN PRONTO
               onPress={() => navigation.navigate('TelaInicialPet')}             
               />
             </View>
