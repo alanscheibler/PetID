@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
       padding: 4,
       alignItems: 'center',
       justifyContent: 'center',
+      marginVertical: 10,
     },
     secondaryButtonText: {
       color: colors.colors.green,
