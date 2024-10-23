@@ -19,6 +19,7 @@ export default function User() {
   const [endereco, setEndereco] = useState('');
   const [senha, setSenha] = useState('');
   const [editableField, setEditableField] = useState(null);
+  const [fotoPerfil, setFotoPerfil] = useState(null);
   const [showPassword, setShowPassword] = useState(false); 
 
   useEffect(() => {
@@ -32,6 +33,7 @@ export default function User() {
         setTelefone(userData[0].telefone);
         setEndereco(userData[0].endereco);
         setSenha(userData[0].senha);
+        setFotoPerfil(userData[0].fotoPerfil);
       }
     });
 
@@ -59,6 +61,7 @@ export default function User() {
         cpf,
         telefone,
         endereco,
+        fotoPerfil
       });
       
       Alert.alert('Dados atualizados com sucesso!');
