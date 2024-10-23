@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { db } from '../firebase/firebaseConnection'; 
 import { collection, onSnapshot, doc, updateDoc } from 'firebase/firestore';
 import colors from '../styles/colors';
-import PIDTextInput from '../components/PIDTextInput';
+import PIDChangeInput from '../components/PIDChangeInput';
 import PIDButton from '../components/PIDButton';
 import * as ImagePicker from 'expo-image-picker'; 
 
@@ -45,9 +45,7 @@ export default function User() {
       aspect: [1, 1],
       quality: 1,
     });
-    if (!result.cancelled) {
-      setFotoPerfil(result.uri);
-    }
+    
   };
 
   const salvarDados = async () => {
@@ -95,112 +93,65 @@ export default function User() {
             />
 
             <View style={styles.inputContainer}>
-              <PIDTextInput 
+              <PIDChangeInput 
                 placeholder='Nome' 
                 value={nome} 
                 editable={editableField === 'nome'} 
                 onChangeText={setNome}
               />
-              {editableField !== 'nome' && (
-                <TouchableWithoutFeedback onPress={() => handleEdit('nome')}>
-                  <Image 
-                    source={require('../assets/icon/Pencil.png')} 
-                    style={styles.icon} 
-                  />
-                </TouchableWithoutFeedback>
-              )}
+            
             </View>
 
             <View style={styles.inputContainer}>
-              <PIDTextInput 
+              <PIDChangeInput 
                 placeholder='E-mail' 
                 value={email} 
                 editable={editableField === 'email'} 
                 onChangeText={setEmail}
               />
-              {editableField !== 'email' && (
-                <TouchableWithoutFeedback onPress={() => handleEdit('email')}>
-                  <Image 
-                    source={require('../assets/icon/Pencil.png')} 
-                    style={styles.icon} 
-                  />
-                </TouchableWithoutFeedback>
-              )}
+              
             </View>
 
             <View style={styles.inputContainer}>
-              <PIDTextInput 
+              <PIDChangeInput 
                 placeholder='CPF' 
                 value={cpf} 
                 editable={editableField === 'cpf'} 
                 onChangeText={setCpf}
               />
-              {editableField !== 'cpf' && (
-                <TouchableWithoutFeedback onPress={() => handleEdit('cpf')}>
-                  <Image 
-                    source={require('../assets/icon/Pencil.png')} 
-                    style={styles.icon} 
-                  />
-                </TouchableWithoutFeedback>
-              )}
+              
             </View>
 
             <View style={styles.inputContainer}>
-              <PIDTextInput 
+              <PIDChangeInput 
                 placeholder='Telefone' 
                 value={telefone} 
                 editable={editableField === 'telefone'} 
                 onChangeText={setTelefone}
               />
-              {editableField !== 'telefone' && (
-                <TouchableWithoutFeedback onPress={() => handleEdit('telefone')}>
-                  <Image 
-                    source={require('../assets/icon/Pencil.png')} 
-                    style={styles.icon} 
-                  />
-                </TouchableWithoutFeedback>
-              )}
+             
             </View>
 
             <View style={styles.inputContainer}>
-              <PIDTextInput 
+              <PIDChangeInput 
                 placeholder='Endereço' 
                 value={endereco} 
                 editable={editableField === 'endereco'} 
                 onChangeText={setEndereco}
               />
-              {editableField !== 'endereco' && (
-                <TouchableWithoutFeedback onPress={() => handleEdit('endereco')}>
-                  <Image 
-                    source={require('../assets/icon/Pencil.png')} 
-                    style={styles.icon} 
-                  />
-                </TouchableWithoutFeedback>
-              )}
+              
             </View>
 
             <View style={styles.inputContainer}>
-              <PIDTextInput 
+              <PIDChangeInput 
                 placeholder='Senha' 
                 value={senha} 
                 secureTextEntry={!showPassword} // Usa o estado para mostrar/esconder a senha
                 editable={editableField === 'senha'} 
                 onChangeText={setSenha}
               />
-              <TouchableWithoutFeedback onPress={() => setShowPassword(!showPassword)}>
-                <Image 
-                  source={require('../assets/icon/Eye.png')} // Ícone para mostrar/esconder a senha
-                  style={styles.icon} 
-                />
-              </TouchableWithoutFeedback>
-              {editableField !== 'senha' && (
-                <TouchableWithoutFeedback onPress={() => handleEdit('senha')}>
-                  <Image 
-                    source={require('../assets/icon/Pencil.png')} 
-                    style={styles.icon} 
-                  />
-                </TouchableWithoutFeedback>
-              )}
+    
+              
             </View>
 
             <View style={styles.buttonContainer}>
@@ -233,6 +184,7 @@ export default function User() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    
     alignItems: 'center',
     backgroundColor: colors.colors.background,
     paddingVertical: 104,
