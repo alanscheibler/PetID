@@ -45,7 +45,9 @@ export default function User() {
       aspect: [1, 1],
       quality: 1,
     });
-    
+    if (!result.cancelled) {
+      setFotoPerfil(result.uri);
+    }
   };
 
   const salvarDados = async () => {
