@@ -17,10 +17,8 @@ export default function User() {
   const [cpf, setCpf] = useState('');
   const [telefone, setTelefone] = useState('');
   const [endereco, setEndereco] = useState('');
-  const [senha, setSenha] = useState('');
   const [editableField, setEditableField] = useState(null);
   const [fotoPerfil, setFotoPerfil] = useState(null);
-  const [showPassword, setShowPassword] = useState(false); 
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'usuario'), (snapshot) => {
@@ -32,7 +30,6 @@ export default function User() {
         setCpf(userData[0].cpf);
         setTelefone(userData[0].telefone);
         setEndereco(userData[0].endereco);
-        setSenha(userData[0].senha);
         setFotoPerfil(userData[0].fotoPerfil);
       }
     });
@@ -48,7 +45,7 @@ export default function User() {
       quality: 1,
     });
     if (!result.cancelled) {
-      setFotoPerfil(result.uri);
+      setFotoPerfil(result.assets[0].uri);
     }
   };
 
@@ -79,7 +76,6 @@ export default function User() {
     setCpf(usuario.cpf);
     setTelefone(usuario.telefone);
     setEndereco(usuario.endereco);
-    setSenha(usuario.senha);
     navigation.navigate('TelaInicialPet');
   };
 
@@ -92,10 +88,15 @@ export default function User() {
       <View style={styles.container}>
         {usuario && (
           <>
+
+          {
+            fotoPerfil ? <Image source={{uri: fotoPerfil}} style={styles.image} /> : 
             <Image 
-              source={require('../assets/img/cadastro.png')} 
-              style={styles.image} 
-            />
+            source={require('../assets/img/cadastro.png')} 
+            style={styles.image} 
+          />
+          }
+            
 
             <View style={styles.inputContainer}>
               <PIDChangeInput 
@@ -144,18 +145,6 @@ export default function User() {
                 editable={editableField === 'endereco'} 
                 onChangeText={setEndereco}
               />
-              
-            </View>
-
-            <View style={styles.inputContainer}>
-              <PIDChangeInput 
-                placeholder='Senha' 
-                value={senha} 
-                secureTextEntry={!showPassword} // Usa o estado para mostrar/esconder a senha
-                editable={editableField === 'senha'} 
-                onChangeText={setSenha}
-              />
-    
               
             </View>
 

@@ -23,7 +23,6 @@ export default function Register() {
   const [endereco, setEndereco] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
-  const [fotoPerfil, setFotoPerfil] = useState(null);
 
   const handleCancel = (() => navigation.navigate('Login'));
 
@@ -44,7 +43,6 @@ export default function Register() {
         telefone,
         endereco,
         uid: user.uid, 
-        fotoPerfil
       });
   
       Alert.alert("Cadastro realizado com sucesso!");
