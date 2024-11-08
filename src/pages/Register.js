@@ -55,8 +55,6 @@ export default function Register() {
 
   return (
     <ScrollView style={globalStyles.scrollContainer}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={globalStyles.container}>
           <StatusBar style="auto" />
           
           <Image 
@@ -83,9 +81,6 @@ export default function Register() {
               <PIDButton title='Cancelar' outline={true} onPress={handleCancel}/>
               <PIDButton title='Criar' onPress={handleRegister} />
           </View>
-
-        </View>
-      </TouchableWithoutFeedback>
     </ScrollView>
   );
 }

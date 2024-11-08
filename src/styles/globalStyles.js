@@ -11,7 +11,7 @@ const globalStyles = StyleSheet.create({
     
     rowContainer: {
         flexDirection: 'row',
-        alignItems: ' center',
+        alignItems: 'center',
         justifyContent:'space-between',
         width: '100%',
         paddingHorizontal: 64,
@@ -21,10 +21,13 @@ const globalStyles = StyleSheet.create({
     alignSelf: 'flex-start', 
     marginLeft: 64
     },
+
     scrollContainer: {
-    backgroundColor: colors.colors.background,
-    paddingVertical: 80
+        backgroundColor: colors.colors.background,
+        paddingVertical: 80, 
+        
     },
+
     footerContainer: {
         position: 'absolute',
         bottom:0,

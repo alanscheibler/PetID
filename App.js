@@ -10,6 +10,7 @@ import Register from './src/pages/Register';
 import TelaInicialPet from './src/pages/TelaInicialPet';
 import User from './src/pages/User';
 import RegisterPet from './src/pages/RegisterPet';
+import Map from './src/pages/Map';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -68,6 +69,11 @@ export default function App() {
         <Stack.Screen
           name='RegisterPet' 
           component={RegisterPet}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='Map' 
+          component={Map}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

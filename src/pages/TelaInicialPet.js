@@ -15,7 +15,7 @@ export default function TelaInicialPet() {
 
     const handleProfilePress = () => { navigation.navigate('User');};
     const onRightPress = () => {navigation.navigate('RegisterPet');}
-    //const onLeftPress = () => {navigation.navigate('Map')} /*está pronta para receber a implementação da tela do mapa*/
+    const onLeftPress = () => {navigation.navigate('Map')}
 
   return (
     <View style={globalStyles.container}>
@@ -30,7 +30,7 @@ export default function TelaInicialPet() {
 
       <PIDFooterBar 
         leftIcon={mapIcon}
-        //leftAction={onLeftPress}
+        leftAction={onLeftPress}
         rightIcon={addPet}
         rightAction={onRightPress}
       />

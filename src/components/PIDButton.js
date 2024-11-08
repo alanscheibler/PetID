@@ -25,13 +25,12 @@ export default function PIDButton({title, onPress, outline, size}) {
 }
 const styles = StyleSheet.create({
     button: {
-        width: 80,
-        height: 36,
         backgroundColor: colors.colors.orange,
         borderRadius: 8,
-        padding: 4,
         alignItems: 'center',
         justifyContent: 'center',
+        paddingHorizontal: 18,
+        paddingVertical: 8,
         marginVertical: 10,
         elevation: 4,
 
@@ -43,13 +42,12 @@ const styles = StyleSheet.create({
     },
 
     secondaryButton: {
-      width: 80,
-      height: 36,
       borderColor: colors.colors.green,
       borderWidth: 2,
       backgroundColor: 'transparent',
       borderRadius: 8,
-      padding: 4,
+      paddingHorizontal: 18,
+      paddingVertical: 8,
       alignItems: 'center',
       justifyContent: 'center',
       marginVertical: 10,
@@ -62,7 +60,7 @@ const styles = StyleSheet.create({
 
     bigSecondaryButton: {
       width: '100%',
-      height: 36,
+      paddingVertical: 8,
       borderColor: colors.colors.green,
       borderWidth: 2,
       backgroundColor: 'transparent',
