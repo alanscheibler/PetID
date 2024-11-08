@@ -26,7 +26,7 @@ export default function Login() {
         email: user.user.email,
         uid: user.user.uid
       })
-      //navigation.navigate('TelaInicialPet');  /* NÃO DELETAR, PERTENCE AO FIREBASE // ENTRA COM LOGIN PRONTO /
+      //navigation.navigate('TelaInicialPet');  /* NÃO DELETAR, PERTENCE AO FIREBASE // ENTRA COM LOGIN PRONTO /*/
     })
     .catch(err => {
       if(err.code === "auth/missing-password"){
@@ -46,7 +46,9 @@ export default function Login() {
             <PIDTextInput placeholder = 'Senha' value={senha} secureTextEntry onChangeText={setSenha} />
             
             <View style={globalStyles.rowContainer}>
-              <PIDTextLink title= 'Esqueci minha senha'/>
+              <PIDTextLink title= 'Esqueci minha senha'
+              onPress={() => navigation.navigate('ForgotPassoword')}
+              />
               <PIDButton title = "Entrar"
               //onPress={handleLogin}  /* NÃO DELETAR, PERTENCE AO FIREBASE // ENTRA COM LOGIN PRONTO /
               onPress={() => navigation.navigate('TelaInicialPet')}             

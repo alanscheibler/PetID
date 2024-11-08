@@ -3,6 +3,7 @@ import { View, Image, TouchableOpacity, StyleSheet, Modal, SafeAreaView, Text, T
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 import { useNavigation } from '@react-navigation/native';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 export default function PIDHeader({ onProfilePress }) {
   const navigation = useNavigation();
@@ -40,10 +41,7 @@ export default function PIDHeader({ onProfilePress }) {
         style={styles.botaoPerfil} 
         onPress={() => setVisible(true)} 
       >
-        <Image 
-          source={require('../assets/img/cadastro.png')} 
-          style={styles.iconePerfil}
-        />
+      <FontAwesome5 name="user-alt" style={styles.icon}/>
       </TouchableOpacity>
 
       {/* Modal para opções */}
@@ -103,9 +101,10 @@ const styles = StyleSheet.create({
     padding: 10,
     top: 30,
   },
-  iconePerfil: {
-    width: 40,
-    height: 40,
+  icon: {
+    paddingTop: 5,
+    fontSize: 24,
+    color: colors.colors.green
   },
   modalBackground: {
     flex: 1,

@@ -2,6 +2,7 @@ import { StyleSheet, TextInput, View, Image } from 'react-native';
 import React, { useState } from 'react';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function PIDChangeInput({icon, ...rest}) {
     const [isFocused, setIsFocused] = useState(false); 
@@ -15,10 +16,7 @@ export default function PIDChangeInput({icon, ...rest}) {
                 {...rest}
                 placeholder="Digite algo..."
             />
-            <Image 
-                source={require('../assets/icon/Pencil.png')}
-                style={styles.icon} 
-            />
+            <Ionicons name="pencil" style={styles.icon} />
         </View>
     );
 }
@@ -51,9 +49,9 @@ const styles = StyleSheet.create({
     },
 
     icon: {
+        fontSize: 16,
         position: 'absolute',
         right: 16, // Posiciona o ícone no canto direito
-        width: 20,
-        height: 20,
+        color: colors.colors.green
     }
 });

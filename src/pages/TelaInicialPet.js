@@ -3,11 +3,13 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import PIDHeader from '../components/PIDHeader';
 import PIDFooterBar from '../components/PIDFooterBar';
+import PIDPetCard from '../components/PIDPetCard';
 
-import mapIcon from '../assets/icon/map.png'; 
-import addPet from '../assets/icon/addPet.png';
 import cores from '../styles/colors'; 
 import { globalStyles } from '../styles/globalStyles';
+
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+
 
 
 export default function TelaInicialPet() {
@@ -16,6 +18,7 @@ export default function TelaInicialPet() {
     const handleProfilePress = () => { navigation.navigate('User');};
     const onRightPress = () => {navigation.navigate('RegisterPet');}
     const onLeftPress = () => {navigation.navigate('Map')}
+    const cardPress = () => {navigation.navigate('VaccinationCard')}
 
   return (
     <View style={globalStyles.container}>
@@ -23,15 +26,14 @@ export default function TelaInicialPet() {
       <PIDHeader onProfilePress={handleProfilePress} />
 
       <View style={styles.mensagemCentral}>
-        <Text style={styles.texto}>
-          Você não tem nenhum Pet cadastrado no momento, você pode adicionar um apertando no símbolo de "mais".
-        </Text>
+        <PIDPetCard 
+        onPress={cardPress}/>
       </View>
 
       <PIDFooterBar 
-        leftIcon={mapIcon}
+        leftIcon={<FontAwesome6 name="map-location-dot" style={globalStyles.icon}/>}
         leftAction={onLeftPress}
-        rightIcon={addPet}
+        rightIcon={<FontAwesome6 name="add" style={globalStyles.icon}/>}
         rightAction={onRightPress}
       />
 
@@ -41,10 +43,10 @@ export default function TelaInicialPet() {
 
 const styles = StyleSheet.create({
   mensagemCentral: {
+    width:'100%',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 30,
   },
   texto: {
     color: cores.colors.green, 

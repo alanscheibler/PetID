@@ -43,6 +43,11 @@ const globalStyles = StyleSheet.create({
         margin: 10,
     },
 
+    icon:{
+        fontSize: 36,
+        color: colors.colors.componentBG
+    }
+
 });
     
 export {globalStyles};

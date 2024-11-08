@@ -11,6 +11,8 @@ import TelaInicialPet from './src/pages/TelaInicialPet';
 import User from './src/pages/User';
 import RegisterPet from './src/pages/RegisterPet';
 import Map from './src/pages/Map';
+import ForgotPassoword from './src/pages/ForgotPassoword';
+import VaccinationCard from './src/pages/VaccinationCard';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -52,6 +54,11 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name='ForgotPassoword' 
+          component={ForgotPassoword}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name='Register' 
           component={Register}
           options={{ headerShown: false }}
@@ -76,6 +83,13 @@ export default function App() {
           component={Map}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name='VaccinationCard' 
+          component={VaccinationCard}
+          options={{ headerShown: false }}
+        />
+
+
       </Stack.Navigator>
     </NavigationContainer>
   );

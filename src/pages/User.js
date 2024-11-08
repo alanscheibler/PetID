@@ -7,6 +7,7 @@ import colors from '../styles/colors';
 import PIDChangeInput from '../components/PIDChangeInput';
 import PIDButton from '../components/PIDButton';
 import * as ImagePicker from 'expo-image-picker'; 
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 export default function User() {
   const navigation = useNavigation();
@@ -91,10 +92,7 @@ export default function User() {
 
           {
             fotoPerfil ? <Image source={{uri: fotoPerfil}} style={styles.image} /> : 
-            <Image 
-            source={require('../assets/img/cadastro.png')} 
-            style={styles.image} 
-          />
+            <FontAwesome5 name="user-alt" style={styles.icon}/> 
           }
             
 
@@ -209,4 +207,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  icon:{
+    fontSize: 70,
+    color: colors.colors.green,
+    paddingBottom: 30,
+  }
 });
