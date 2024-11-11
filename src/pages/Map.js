@@ -9,6 +9,7 @@ export default function Map() {
     const navigation = useNavigation();
     const [customMarkers, setCustomMarkers] = useState([]);
     const [userLocation, setUserLocation] = useState(null);
+    const backButtonPress = () => {navigation.navigate('TelaInicialPet')}
 
     useFocusEffect(
         useCallback(() => {
@@ -40,7 +41,9 @@ export default function Map() {
 
     return (
         <View style={styles.container}>
-            <PIDHeader/>
+            <PIDHeader 
+            showBackButton 
+            backButtonPress={backButtonPress}/>
             {userLocation ? (
                 <MapView
                     onPress={handleMapPress}

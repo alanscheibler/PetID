@@ -5,9 +5,9 @@ import fonts from '../styles/fonts';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
-export default function PIDHeader({ onProfilePress }) {
+export default function PIDHeader({ onProfilePress, showBackButton = false, backButtonPress }) {
   const navigation = useNavigation();
-  const [isDarkMode, setIsDarkMode] = useState(false); // Estado do switch
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [visible, setVisible] = useState(false);
 
   const options = [
@@ -20,7 +20,7 @@ export default function PIDHeader({ onProfilePress }) {
     },
     {
       title: 'Alterar tema',
-      custom: true, // Indica que essa opção terá o switch
+      custom: true, 
     },
     {
       title: 'Sair',
@@ -33,6 +33,14 @@ export default function PIDHeader({ onProfilePress }) {
 
   return (
     <View style={styles.barraSuperior}>
+      {showBackButton && (
+        <TouchableOpacity
+        style={styles.backButton}
+        onPress={backButtonPress}>
+        <FontAwesome5 name="angle-double-left" style={styles.icon}/>
+        </TouchableOpacity>
+        
+      )}
       <Image 
         source={require('../assets/img/Logo.png')} 
         style={styles.iconePata}
@@ -53,16 +61,15 @@ export default function PIDHeader({ onProfilePress }) {
                 <TouchableOpacity
                   style={styles.option}
                   key={i}
-                  onPress={op.custom ? null : op.action} // Apenas adiciona ação se não for custom
-                  activeOpacity={op.custom ? 1 : 0.7} // Desabilita opacidade no switch
+                  onPress={op.custom ? null : op.action} 
+                  activeOpacity={op.custom ? 1 : 0.7}
                 >
                   <Text style={styles.optionText}>{op.title}</Text>
                   {op.custom && (
                     <Switch
                       value={isDarkMode}
                       onValueChange={(value) => {
-                        setIsDarkMode(value); // Alterna entre claro e escuro
-                        // Ação adicional para alterar tema aqui, se necessário
+                        setIsDarkMode(value); 
                       }}
                       thumbColor={isDarkMode ? colors.colors.green : '#f4f3f4'}
                       trackColor={{ false: '#767577', true: '#81b0ff' }}
@@ -110,7 +117,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'transparent', // Sem fundo escurecido
+    backgroundColor: 'transparent',
   },
   popup: {
     borderRadius: 8,
@@ -123,7 +130,7 @@ const styles = StyleSheet.create({
   },
   option: {
     flexDirection: 'row',
-    justifyContent: 'space-between', // Alinha texto e switch
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 8,
     paddingHorizontal: 8,
@@ -133,4 +140,14 @@ const styles = StyleSheet.create({
     color: colors.colors.green,
     fontSize: 16,
   },
+  backButton: {
+    position: 'absolute',
+    left: 10,
+    padding: 10,
+    top: 30,
+  },
+  icon:{
+    fontSize: 24,
+    color: colors.colors.green
+  }  
 });
