@@ -23,9 +23,7 @@ const globalStyles = StyleSheet.create({
     },
 
     scrollContainer: {
-        backgroundColor: colors.colors.background,
-        paddingVertical: 80, 
-        
+        backgroundColor: colors.colors.background        
     },
 
     footerContainer: {
@@ -40,7 +38,7 @@ const globalStyles = StyleSheet.create({
         width: 100,
         height: 100,
         resizeMode: 'contain',
-        margin: 10,
+        margin: 5,
     },
 
     icon:{
