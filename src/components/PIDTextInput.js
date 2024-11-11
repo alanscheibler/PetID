@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
 
     input: {
         width: '100%',
-        height: 36,
+        height: 40,
         paddingHorizontal: 16,
         fontSize: fonts.size.medium,
         fontFamily: fonts.families.light,
