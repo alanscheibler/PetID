@@ -1,11 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, TouchableWithoutFeedback, ScrollView, View, Keyboard, Image, Alert } from 'react-native';
+import { ScrollView, View, Image, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../firebase/firebaseConnection'; 
+import { auth } from '../firebase/firebaseConnection';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+
 import { globalStyles } from '../styles/globalStyles';
-
-import { registerUser } from '../Services/userService';
-
 import PIDTextInput from '../components/PIDTextInput';
 import PIDButton from '../components/PIDButton';
 import PIDCheckMarker from '../components/PIDCheckMarker';
@@ -29,51 +31,61 @@ export default function Register() {
       Alert.alert("As senhas não coincidem!");
       return;
     }
-
-    const userData = { nome, email, cpf, telefone, endereco, senha };
-    const result = await registerUser(userData);
-
-    if (result.success) {
-      Alert.alert(result.message, "Verifique seu email.");
+  
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
+      const user = userCredential.user;
+  
+      await addDoc(collection(db, "usuario"), {
+        nome,
+        email,
+        cpf,
+        telefone,
+        endereco,
+        uid: user.uid, 
+      });
+  
+      Alert.alert("Cadastro realizado com sucesso!");
       navigation.navigate('Login');
-    } else {
-      console.log("Erro ao cadastrar:", result.message);
-      Alert.alert("Erro ao cadastrar", result.message);
+    } catch (error) {
+      console.log("Erro ao cadastrar: ", error.message);
+      Alert.alert("Erro ao cadastrar", error.message);
     }
   };
 
   return (
     <ScrollView style={globalStyles.scrollContainer}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={globalStyles.container}>
-          <StatusBar style="auto" />
-          
-          <Image 
-            source={require('../assets/img/LogoTitulo.png')}
-            style={globalStyles.image} 
-          />
+      <StatusBar style="auto" />
 
-          <PIDTextInput placeholder='Nome' value={nome} onChangeText={setNome} />
-          <PIDTextInput placeholder='E-mail' value={email} onChangeText={setEmail} />
-          <PIDTextInput placeholder='CPF' value={cpf} onChangeText={setCpf} />
-          <PIDTextInput placeholder='Telefone*' value={telefone} onChangeText={setTelefone} />
-          <PIDTextInput placeholder='Endereço*' value={endereco} onChangeText={setEndereco} />
-          <PIDTextInput placeholder='Senha' value={senha} secureTextEntry onChangeText={setSenha} />
-          <PIDTextInput placeholder='Confirme sua senha' value={confirmarSenha} secureTextEntry onChangeText={setConfirmarSenha} />
+      <View style={{ justifyContent: 'center', alignItems: 'center',paddingTop: 60, paddingBottom: 30 }}>
+        <Image 
+          source={require('../assets/img/LogoTitulo.png')}
+          style={globalStyles.image} 
+        />
 
-          <View style={globalStyles.containerLeft}>
-            <PIDCheckMarker title='Desejo receber as notificações' />
-            <PIDCheckMarker title='Concordo com os'> 
-              <PIDTextLink title={'termos de uso'} underlined />
-            </PIDCheckMarker>
+        <PIDTextInput placeholder='Nome' value={nome} onChangeText={setNome} />
+        <PIDTextInput placeholder='E-mail' value={email} onChangeText={setEmail} />
+        <PIDTextInput placeholder='CPF' value={cpf} onChangeText={setCpf} />
+        <PIDTextInput placeholder='Telefone*' value={telefone} onChangeText={setTelefone} />
+        <PIDTextInput placeholder='Endereço*' value={endereco} onChangeText={setEndereco} />
+        <PIDTextInput placeholder='Senha' value={senha} secureTextEntry onChangeText={setSenha} />
+        <PIDTextInput placeholder='Confirme sua senha' value={confirmarSenha} secureTextEntry onChangeText={setConfirmarSenha} />
+
+        <View style={globalStyles.containerLeft}>
+          <PIDCheckMarker title='Desejo receber as notificações' />
+          <PIDCheckMarker title='Concordo com os'> 
+            <PIDTextLink title='termos de uso' underlined />
+          </PIDCheckMarker>
+        </View>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '80%', paddingHorizontal: 20 }}>
+          <View style={{ flex: 1, marginRight: 10 }}>
+            <PIDButton title='Cancelar' outline onPress={handleCancel} />
           </View>
-
-          <View style={globalStyles.rowContainer}>
-            <PIDButton title='Cancelar' outline={true} onPress={handleCancel} />
-            <PIDButton title='Criar' onPress={() => handleRegister()} />
+          <View style={{ flex: 1, marginLeft: 10 }}>
+            <PIDButton title='Criar' onPress={handleRegister} />
           </View>
         </View>
-      </TouchableWithoutFeedback>
+      </View>
     </ScrollView>
   );
 }
