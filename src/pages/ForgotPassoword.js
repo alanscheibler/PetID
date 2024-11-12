@@ -9,8 +9,6 @@ import PIDTextInput from '../components/PIDTextInput'
 import PIDButton from '../components/PIDButton';
 import colors from '../styles/colors';
 
-
-
 export default function ForgotPassoword() {
     const navigation = useNavigation();
 

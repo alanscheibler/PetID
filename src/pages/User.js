@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, TouchableWithoutFeedback, View, Keyboard, Image, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { db } from '../firebase/firebaseConnection'; 
-import { collection, onSnapshot, doc, updateDoc } from 'firebase/firestore';
+import { getUserData, updateUserData } from '../Services/userService'; // Importando as funções do Supabase
 import colors from '../styles/colors';
 import PIDChangeInput from '../components/PIDChangeInput';
 import PIDButton from '../components/PIDButton';
@@ -22,20 +21,22 @@ export default function User() {
   const [fotoPerfil, setFotoPerfil] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, 'usuario'), (snapshot) => {
-      const userData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      if (userData.length > 0) {
-        setUsuario(userData[0]);
-        setNome(userData[0].nome);
-        setEmail(userData[0].email);
-        setCpf(userData[0].cpf);
-        setTelefone(userData[0].telefone);
-        setEndereco(userData[0].endereco);
-        setFotoPerfil(userData[0].fotoPerfil);
+    const loadUserData = async () => {
+      const result = await getUserData();
+      if (result.success) {
+        setUsuario(result.data);
+        setNome(result.data.nome);
+        setEmail(result.data.email);
+        setCpf(result.data.cpf);
+        setTelefone(result.data.telefone);
+        setEndereco(result.data.endereco);
+        setFotoPerfil(result.data.fotoPerfil);
+      } else {
+        console.error(result.message);
       }
-    });
+    };
 
-    return () => unsubscribe();
+    loadUserData();
   }, []);
 
   const alterarFotoPerfil = async () => {
@@ -51,22 +52,14 @@ export default function User() {
   };
 
   const salvarDados = async () => {
-    try {
-      const userRef = doc(db, 'usuario', usuario.id);
-      await updateDoc(userRef, {
-        nome,
-        email,
-        cpf,
-        telefone,
-        endereco,
-        fotoPerfil
-      });
-      
+    const data = { nome, email, cpf, telefone, endereco, fotoPerfil };
+    const result = await updateUserData(usuario.id, data);
+
+    if (result.success) {
       Alert.alert('Dados atualizados com sucesso!');
       setEditableField(null); 
-    } catch (error) {
-      console.error("Erro ao atualizar os dados: ", error);
-      Alert.alert('Erro', 'Não foi possível atualizar os dados.');
+    } else {
+      Alert.alert('Erro', result.message);
     }
   };
 
@@ -89,12 +82,11 @@ export default function User() {
       <View style={styles.container}>
         {usuario && (
           <>
-
-          {
-            fotoPerfil ? <Image source={{uri: fotoPerfil}} style={styles.image} /> : 
-            <FontAwesome5 name="user-alt" style={styles.icon}/> 
-          }
-            
+            {fotoPerfil ? (
+              <Image source={{ uri: fotoPerfil }} style={styles.image} />
+            ) : (
+              <FontAwesome5 name="user-alt" style={styles.icon} />
+            )}
 
             <View style={styles.inputContainer}>
               <PIDChangeInput 
@@ -103,7 +95,6 @@ export default function User() {
                 editable={editableField === 'nome'} 
                 onChangeText={setNome}
               />
-            
             </View>
 
             <View style={styles.inputContainer}>
@@ -113,7 +104,6 @@ export default function User() {
                 editable={editableField === 'email'} 
                 onChangeText={setEmail}
               />
-              
             </View>
 
             <View style={styles.inputContainer}>
@@ -123,7 +113,6 @@ export default function User() {
                 editable={editableField === 'cpf'} 
                 onChangeText={setCpf}
               />
-              
             </View>
 
             <View style={styles.inputContainer}>
@@ -133,7 +122,6 @@ export default function User() {
                 editable={editableField === 'telefone'} 
                 onChangeText={setTelefone}
               />
-             
             </View>
 
             <View style={styles.inputContainer}>
@@ -143,7 +131,6 @@ export default function User() {
                 editable={editableField === 'endereco'} 
                 onChangeText={setEndereco}
               />
-              
             </View>
 
             <View style={styles.buttonContainer}>
@@ -176,7 +163,6 @@ export default function User() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    
     alignItems: 'center',
     backgroundColor: colors.colors.background,
     paddingVertical: 104,
@@ -196,9 +182,9 @@ const styles = StyleSheet.create({
     marginTop: 10, 
   },
   icon: {
-    width: 20,
-    height: 20,
-    marginLeft: 5, 
+    fontSize: 70,
+    color: colors.colors.green,
+    paddingBottom: 30,
   },
   buttonContainer: {
     width: '100%',
@@ -207,9 +193,4 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  icon:{
-    fontSize: 70,
-    color: colors.colors.green,
-    paddingBottom: 30,
-  }
 });

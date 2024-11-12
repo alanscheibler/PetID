@@ -10,8 +10,6 @@ import { globalStyles } from '../styles/globalStyles';
 
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
-
-
 export default function TelaInicialPet() {
     const navigation = useNavigation();
 

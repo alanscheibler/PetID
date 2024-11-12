@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, TouchableWithoutFeedback, ScrollView, View, Keyboard, Image, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { db } from '../firebase/firebaseConnection';
-import { collection, addDoc } from 'firebase/firestore'; 
-import { StatusBar } from 'expo-status-bar';
-import * as ImagePicker from 'expo-image-picker';
+import { useState } from 'react';
 import { globalStyles } from '../styles/globalStyles';
+
+import { registerPet } from '../Services/PetService'; 
 
 import PIDTextInput from '../components/PIDTextInput';
 import PIDButton from '../components/PIDButton';
@@ -13,43 +12,26 @@ import PIDCheckMarker from '../components/PIDCheckMarker';
 
 export default function RegisterPet() {
   const navigation = useNavigation();
-  
-  const [fotoPerfil, setFotoPerfil] = useState(null);
+
   const [nome, setNome] = useState('');
   const [especie, setEspecie] = useState('');
   const [raca, setRaca] = useState('');
   const [dataNascimento, setDataNascimento] = useState('');
   const [sexo, setSexo] = useState('');
   const [petCastrado, setPetCastrado] = useState(false);
+  const [fotoPerfil, setFotoPerfil] = useState(null);
 
-  const alterarFotoPerfil = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-    if (!result.cancelled) {
-      setFotoPerfil(result.uri);
-    }
-  };
+  const handleCancel = () => navigation.navigate('TelaInicialPet');
 
-  const onRegisterPress = async () => {
-    try {
-      await addDoc(collection(db, 'pets'), {
-        nome,
-        especie,
-        raca,
-        dataNascimento,
-        sexo,
-        petCastrado,
-        fotoPerfil,
-      });
-      Alert.alert('Pet registrado com sucesso!');
-      navigation.navigate('TelaInicialPet'); 
-    } catch (error) {
-      console.error("Erro ao registrar o pet: ", error);
-      Alert.alert('Erro', 'Não foi possível registrar o pet.');
+  const handleRegister = async () => {
+    const petData = { nome, especie, raca, dataNascimento, sexo, petCastrado };
+    const result = await registerPet(petData);
+
+    if (result.success) {
+      Alert.alert(result.message, "O pet foi registrado com sucesso!");
+      navigation.navigate('TelaInicialPet');
+    } else {
+      Alert.alert("Erro ao registrar o pet", result.message);
     }
   };
 
@@ -67,7 +49,7 @@ export default function RegisterPet() {
           <PIDTextInput placeholder='Nome' value={nome} onChangeText={setNome} />
           <PIDTextInput placeholder='Espécie' value={especie} onChangeText={setEspecie} />
           <PIDTextInput placeholder='Raça' value={raca} onChangeText={setRaca} />
-          <PIDTextInput placeholder='Data de nascimento' value={dataNascimento} onChangeText={setDataNascimento} />
+          <PIDTextInput placeholder='Data de Nascimento' value={dataNascimento} onChangeText={setDataNascimento} />
           <PIDTextInput placeholder='Sexo' value={sexo} onChangeText={setSexo} />
 
           <View style={globalStyles.rowContainer}>
@@ -80,20 +62,22 @@ export default function RegisterPet() {
 
           <View style={globalStyles.rowContainer}>
             <PIDButton 
-              title='Alterar Foto' 
+              title="Alterar Foto" 
               outline={true} 
-              onPress={alterarFotoPerfil} 
-              size='big'
+              onPress={() => alterarFotoPerfil()} 
             />
-          </View> 
-          
-          <View style={globalStyles.rowContainer}>
-            <PIDButton title='Cancelar' outline={true} onPress={() => navigation.navigate('TelaInicialPet')} />
-            <PIDButton title='Registrar' onPress={onRegisterPress} />
           </View>
-          
+
+          <View style={globalStyles.rowContainer}>
+            <PIDButton title='Cancelar' outline={true} onPress={handleCancel} />
+            <PIDButton title='Registrar' onPress={handleRegister} />
+          </View>
         </View>
       </TouchableWithoutFeedback>
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  // Adicione seus estilos aqui
+});

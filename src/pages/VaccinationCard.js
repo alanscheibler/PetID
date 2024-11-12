@@ -3,8 +3,6 @@ import React from 'react'
 import PIDHeader from '../components/PIDHeader'
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
-
-
 export default function VaccinationCard() {
   const navigation = useNavigation();
   const backButtonPress = () => {navigation.navigate('TelaInicialPet')}
