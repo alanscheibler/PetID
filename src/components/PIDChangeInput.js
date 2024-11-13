@@ -3,8 +3,10 @@ import React, { useState } from 'react';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { Touchable } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
-export default function PIDChangeInput({icon, ...rest}) {
+export default function PIDChangeInput({icon, editOnPress, ...rest}) {
     const [isFocused, setIsFocused] = useState(false); 
     
     return (
@@ -13,10 +15,14 @@ export default function PIDChangeInput({icon, ...rest}) {
                 style={[styles.input, isFocused && styles.inputFocused]} 
                 onFocus={() => setIsFocused(true)} 
                 onBlur={() => setIsFocused(false)} 
+                placeholder={"Digite algo..."}
                 {...rest}
-                placeholder="Digite algo..."
             />
-            <Ionicons name="pencil" style={styles.icon} />
+            <TouchableOpacity
+                onPress={editOnPress} >
+                <Ionicons name="pencil" style={styles.icon} />
+            </TouchableOpacity>
+            
         </View>
     );
 }

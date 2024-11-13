@@ -1,18 +1,19 @@
-import { StatusBar } from 'expo-status-bar';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, TouchableWithoutFeedback, ScrollView, View, Keyboard, Image, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useState } from 'react';
+import { StatusBar } from 'expo-status-bar';
+import * as ImagePicker from 'expo-image-picker';
 import { globalStyles } from '../styles/globalStyles';
 
-import { registerPet } from '../Services/PetService'; 
+import { registerPet } from '../Services/PetService';
 
 import PIDTextInput from '../components/PIDTextInput';
 import PIDButton from '../components/PIDButton';
 import PIDCheckMarker from '../components/PIDCheckMarker';
 
-export default function RegisterPet() {
+export default async function RegisterPet() {
   const navigation = useNavigation();
-
+  
   const [nome, setNome] = useState('');
   const [especie, setEspecie] = useState('');
   const [raca, setRaca] = useState('');
@@ -21,18 +22,31 @@ export default function RegisterPet() {
   const [petCastrado, setPetCastrado] = useState(false);
   const [fotoPerfil, setFotoPerfil] = useState(null);
 
+  const alterarFotoPerfil = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+    if (!result.cancelled) {
+      setFotoPerfil(result.uri);
+    }
+  };
+
   const handleCancel = () => navigation.navigate('TelaInicialPet');
 
   const handleRegister = async () => {
     const petData = { nome, especie, raca, dataNascimento, sexo, petCastrado };
     const result = await registerPet(petData);
-
     if (result.success) {
-      Alert.alert(result.message, "O pet foi registrado com sucesso!");
+      Alert.alert('Pet registrado com sucesso!');
       navigation.navigate('TelaInicialPet');
     } else {
-      Alert.alert("Erro ao registrar o pet", result.message);
-    }
+      console.error("Erro ao registrar o pet: ", error);
+      Alert.alert('Erro', 'Não foi possível registrar o pet.');
+    };
+
   };
 
   return (
@@ -49,7 +63,7 @@ export default function RegisterPet() {
           <PIDTextInput placeholder='Nome' value={nome} onChangeText={setNome} />
           <PIDTextInput placeholder='Espécie' value={especie} onChangeText={setEspecie} />
           <PIDTextInput placeholder='Raça' value={raca} onChangeText={setRaca} />
-          <PIDTextInput placeholder='Data de Nascimento' value={dataNascimento} onChangeText={setDataNascimento} />
+          <PIDTextInput placeholder='Data de nascimento' value={dataNascimento} onChangeText={setDataNascimento} />
           <PIDTextInput placeholder='Sexo' value={sexo} onChangeText={setSexo} />
 
           <View style={globalStyles.rowContainer}>
@@ -62,12 +76,13 @@ export default function RegisterPet() {
 
           <View style={globalStyles.rowContainer}>
             <PIDButton 
-              title="Alterar Foto" 
+              title='Alterar Foto' 
               outline={true} 
-              onPress={() => alterarFotoPerfil()} 
+              onPress={alterarFotoPerfil} 
+              size='big'
             />
-          </View>
-
+          </View> 
+          
           <View style={globalStyles.rowContainer}>
             <PIDButton title='Cancelar' outline={true} onPress={handleCancel} />
             <PIDButton title='Registrar' onPress={handleRegister} />
@@ -77,7 +92,3 @@ export default function RegisterPet() {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  // Adicione seus estilos aqui
-});

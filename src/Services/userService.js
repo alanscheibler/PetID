@@ -48,38 +48,19 @@ export async function loginUser(email, senha) {
       if (authError) {
         throw new Error(authError.message);
       }
-  
-      return { success: true, user: authUser };
-    } catch (error) {
-      return { success: false, message: error.message };
-    }
-  }
 
-export async function getUserData() {
-    try {
-      const { data, error } = await supabase.from('usuario').select('*').single();
-      if (error) {
-        throw new Error(error.message);
-      }
-      return { success: true, data };
-    } catch (error) {
-      return { success: false, message: error.message };
-    }
-  }
-  
-export async function updateUserData(userId, data) {
-    try {
-      const { error } = await supabase
+      const { data: userData, error: userError } = await supabase
         .from('usuario')
-        .update(data)
-        .match({ id: userId });
-  
-      if (error) {
-        throw new Error(error.message);
+        .select('*')
+        .eq("id_usuario", authUser.user.id)
+        .single();
+        
+      if (userError) {
+        throw new Error(userError.message);
       }
   
-      return { success: true };
+      return { success: true, user: userData };
     } catch (error) {
-      return { success: false, message: error.message };
+      return { success: false, message: userError.message };
     }
   }

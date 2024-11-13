@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, TouchableWithoutFeedback, View, Keyboard, Image, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { getUserData, updateUserData } from '../Services/userService'; // Importando as funções do Supabase
+
+import { getUserData, updateUserData } from '../Services/userCRUD'; 
+
 import colors from '../styles/colors';
 import PIDChangeInput from '../components/PIDChangeInput';
 import PIDButton from '../components/PIDButton';
 import * as ImagePicker from 'expo-image-picker'; 
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
+import { useAuth } from '../context/AuthContext';
+
 export default function User() {
   const navigation = useNavigation();
+
+  const {user} = useAuth();
 
   const [usuario, setUsuario] = useState(null);
   const [nome, setNome] = useState('');
@@ -21,14 +27,16 @@ export default function User() {
   const [fotoPerfil, setFotoPerfil] = useState(null);
 
   useEffect(() => {
+    console.log(user)
     const loadUserData = async () => {
-      const result = await getUserData();
+      const result = await getUserData(user.id_usuario);
+      console.log(result)
       if (result.success) {
         setUsuario(result.data);
         setNome(result.data.nome);
         setEmail(result.data.email);
         setCpf(result.data.cpf);
-        setTelefone(result.data.telefone);
+        setTelefone(result.data.telefone.toString());
         setEndereco(result.data.endereco);
         setFotoPerfil(result.data.fotoPerfil);
       } else {
@@ -52,7 +60,7 @@ export default function User() {
   };
 
   const salvarDados = async () => {
-    const data = { nome, email, cpf, telefone, endereco, fotoPerfil };
+    const data = { nome, email, cpf, telefone, endereco };
     const result = await updateUserData(usuario.id, data);
 
     if (result.success) {
@@ -61,6 +69,25 @@ export default function User() {
     } else {
       Alert.alert('Erro', result.message);
     }
+  };
+
+  const handleSave = async () => {
+    const data = { nome, email, cpf, telefone, endereco };
+   /* if (!description) {
+      Alert.alert("Erro", "Por favor, preencha o campo de descrição.");
+      return;
+    }
+    */
+
+    if (id) {
+      const response = await updateBrand(id, { data });
+      console.log(response);
+    } else {
+      const response = await createBrand({ data, id_usuario: user.id });
+      console.log(response);
+    }
+
+    navigation.goBack();
   };
 
   const cancelarAlteracoes = () => {
@@ -73,8 +100,8 @@ export default function User() {
     navigation.navigate('TelaInicialPet');
   };
 
-  const handleEdit = (field) => {
-    setEditableField(field);
+  const handleEdit = (usuario) => {
+    navigation.navigate("User", { usuario });
   };
 
   return (
@@ -90,46 +117,46 @@ export default function User() {
 
             <View style={styles.inputContainer}>
               <PIDChangeInput 
-                placeholder='Nome' 
+                placeholder={'Nome'} 
                 value={nome} 
-                editable={editableField === 'nome'} 
                 onChangeText={setNome}
+                editOnPress={handleEdit}
               />
             </View>
 
             <View style={styles.inputContainer}>
               <PIDChangeInput 
-                placeholder='E-mail' 
+                placeholder={'E-mail'} 
                 value={email} 
-                editable={editableField === 'email'} 
                 onChangeText={setEmail}
+                editOnPress={handleEdit}
               />
             </View>
 
             <View style={styles.inputContainer}>
               <PIDChangeInput 
-                placeholder='CPF' 
+                placeholder={'CPF'} 
                 value={cpf} 
-                editable={editableField === 'cpf'} 
                 onChangeText={setCpf}
+                editOnPress={handleEdit}
               />
             </View>
 
             <View style={styles.inputContainer}>
               <PIDChangeInput 
-                placeholder='Telefone' 
+                placeholder={'Telefone'} 
                 value={telefone} 
-                editable={editableField === 'telefone'} 
                 onChangeText={setTelefone}
+                editOnPress={handleEdit}
               />
             </View>
 
             <View style={styles.inputContainer}>
               <PIDChangeInput 
-                placeholder='Endereço' 
+                placeholder={'Endereço'}
                 value={endereco} 
-                editable={editableField === 'endereco'} 
                 onChangeText={setEndereco}
+                editOnPress={handleEdit}
               />
             </View>
 
@@ -150,7 +177,7 @@ export default function User() {
               />
               <PIDButton 
                 title='Salvar' 
-                onPress={salvarDados} 
+                onPress={handleSave} 
               />
             </View>  
           </>

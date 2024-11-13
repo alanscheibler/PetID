@@ -11,8 +11,10 @@ import TelaInicialPet from './src/pages/TelaInicialPet';
 import User from './src/pages/User';
 import RegisterPet from './src/pages/RegisterPet';
 import Map from './src/pages/Map';
-import ForgotPassoword from './src/pages/ForgotPassoword';
+import ForgotPassword from './src/pages/ForgotPassword';
 import VaccinationCard from './src/pages/VaccinationCard';
+
+import { AuthProvider } from './src/context/AuthContext';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -46,51 +48,53 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName='Login'>
-        <Stack.Screen
-          name='Login' 
-          component={Login}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name='ForgotPassoword' 
-          component={ForgotPassoword}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name='Register' 
-          component={Register}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name='TelaInicialPet' 
-          component={TelaInicialPet}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name='User' 
-          component={User}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name='RegisterPet' 
-          component={RegisterPet}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name='Map' 
-          component={Map}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name='VaccinationCard' 
-          component={VaccinationCard}
-          options={{ headerShown: false }}
-        />
+    <AuthProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName='Login'>
+          <Stack.Screen
+            name='Login' 
+            component={Login}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='ForgotPassword' 
+            component={ForgotPassword}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='Register' 
+            component={Register}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='TelaInicialPet' 
+            component={TelaInicialPet}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='User' 
+            component={User}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='RegisterPet' 
+            component={RegisterPet}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='Map' 
+            component={Map}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='VaccinationCard' 
+            component={VaccinationCard}
+            options={{ headerShown: false }}
+          />
 
 
-      </Stack.Navigator>
-    </NavigationContainer>
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AuthProvider>
   );
 }

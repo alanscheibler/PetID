@@ -23,7 +23,7 @@ const globalStyles = StyleSheet.create({
     },
 
     scrollContainer: {
-        backgroundColor: colors.colors.background        
+        backgroundColor: colors.colors.background,
     },
 
     footerContainer: {

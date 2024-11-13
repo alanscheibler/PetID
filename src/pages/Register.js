@@ -2,10 +2,8 @@ import { StatusBar } from 'expo-status-bar';
 import { ScrollView, View, Image, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
-import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../firebase/firebaseConnection'; 
-import { auth } from '../firebase/firebaseConnection';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+
+import { registerUser } from '../Services/userService';
 
 import { globalStyles } from '../styles/globalStyles';
 import PIDTextInput from '../components/PIDTextInput';
@@ -32,24 +30,14 @@ export default function Register() {
       return;
     }
   
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
-      const user = userCredential.user;
-  
-      await addDoc(collection(db, "usuario"), {
-        nome,
-        email,
-        cpf,
-        telefone,
-        endereco,
-        uid: user.uid, 
-      });
-  
-      Alert.alert("Cadastro realizado com sucesso!");
+    const userData = { nome, email, cpf, telefone, endereco, senha };
+    const result = await registerUser(userData);
+    if (result.success) {
+      Alert.alert(result.message, "Verifique seu email.");
       navigation.navigate('Login');
-    } catch (error) {
-      console.log("Erro ao cadastrar: ", error.message);
-      Alert.alert("Erro ao cadastrar", error.message);
+    } else {
+      console.log("Erro ao cadastrar:", result.message);
+      Alert.alert("Erro ao cadastrar", result.message);
     }
   };
 
