@@ -6,12 +6,14 @@ import * as ImagePicker from 'expo-image-picker';
 import { globalStyles } from '../styles/globalStyles';
 
 import { registerPet } from '../Services/PetService';
+import { useAuth } from '../context/AuthContext'; 
 
 import PIDTextInput from '../components/PIDTextInput';
 import PIDButton from '../components/PIDButton';
 import PIDCheckMarker from '../components/PIDCheckMarker';
 
-export default async function RegisterPet() {
+export default function RegisterPet() {
+  const { user } = useAuth(); 
   const navigation = useNavigation();
   
   const [nome, setNome] = useState('');
@@ -37,18 +39,30 @@ export default async function RegisterPet() {
   const handleCancel = () => navigation.navigate('TelaInicialPet');
 
   const handleRegister = async () => {
+    console.log("Handle Register iniciado");
+  
+    if (!user) {
+      Alert.alert('Erro', 'Você precisa estar logado para registrar um pet.');
+      return;
+    }
+  
+    console.log("Usuário encontrado:", user); 
+  
     const petData = { nome, especie, raca, dataNascimento, sexo, petCastrado };
+    console.log("Dados do pet:", petData);
+  
     const result = await registerPet(petData);
+    console.log("Resultado do registro:", result);
+  
     if (result.success) {
       Alert.alert('Pet registrado com sucesso!');
-      navigation.navigate('TelaInicialPet');
+      navigation.goBack();
     } else {
-      console.error("Erro ao registrar o pet: ", error);
+      console.error("Erro ao registrar o pet: ", result.error);
       Alert.alert('Erro', 'Não foi possível registrar o pet.');
-    };
-
+    }
   };
-
+  
   return (
     <ScrollView style={globalStyles.scrollContainer}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

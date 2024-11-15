@@ -64,3 +64,55 @@ export async function loginUser(email, senha) {
       return { success: false, message: userError.message };
     }
   }
+
+export async function getUserData(id) {
+  try {
+    const { data, error } = await supabase.from('usuario').select('*').eq("id_usuario", id).single();
+    if (error) {
+      throw new Error(error.message);
+    }
+    return { success: true, data };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+}
+
+export async function updateUserData(id_usuario, updateData) {
+  const { data, error } = await supabase
+    .from("usuario")
+    .update(updateData)
+    .eq("id_usuario", id_usuario)
+    .select();
+
+  if (error) {
+    console.log("Erro ao atualizar dados:", error.message);
+    return { success: false, error };
+   }
+      
+  console.log("Dados atualizados com sucesso:", data);
+  return { success: true, data };
+}
+
+const uploadPhoto = async (uri, usuario) => {
+  const fileExt = uri.split('.').pop(); 
+  const fileName = `${usuario.id_usuario}_foto.${fileExt}`; 
+
+  const response = await fetch(uri);
+  const blob = await response.blob(); 
+
+  const { data, error } = await supabase.storage
+    .from('perfil-fotos') 
+    .upload(fileName, blob, { contentType: `image/${fileExt}` });
+
+  if (error) {
+    console.error("Erro no upload:", error.message);
+    return null;
+  }
+
+  const publicURL = supabase.storage
+    .from('perfil-fotos')
+    .getPublicUrl(fileName).publicURL;
+
+  return publicURL; 
+};
+

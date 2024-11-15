@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, TouchableWithoutFeedback, View, Keyboard, Image, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import { getUserData, updateUserData } from '../Services/userCRUD'; 
+import { getUserData, updateUserData } from '../Services/userService'; 
 
 import colors from '../styles/colors';
 import PIDChangeInput from '../components/PIDChangeInput';
@@ -54,40 +54,43 @@ export default function User() {
       aspect: [1, 1],
       quality: 1,
     });
+  
     if (!result.cancelled) {
       setFotoPerfil(result.assets[0].uri);
+  
+      const imageUrl = await uploadPhoto(result.assets[0].uri, usuario);
+  
+      if (imageUrl) {
+        const updatedUser = await updateUserData(usuario.id_usuario, { fotoPerfil: imageUrl });
+  
+        if (updatedUser.success) {
+          Alert.alert('Foto de perfil atualizada com sucesso!');
+        } else {
+          Alert.alert('Erro', 'Ocorreu um erro ao atualizar a foto de perfil.');
+        }
+      } else {
+        Alert.alert('Erro', 'Falha ao fazer upload da imagem.');
+      }
     }
   };
-
+  
   const salvarDados = async () => {
-    const data = { nome, email, cpf, telefone, endereco };
-    const result = await updateUserData(usuario.id, data);
+    let fotoUrl = fotoPerfil;
+
+    if (!fotoUrl) {
+      fotoUrl = usuario.fotoPerfil;
+    }
+
+    const data = { nome, email, cpf, telefone, endereco, fotoPerfil: fotoUrl };
+    const result = await updateUserData(usuario.id_usuario, data);
 
     if (result.success) {
       Alert.alert('Dados atualizados com sucesso!');
       setEditableField(null); 
+      navigation.navigate('TelaInicialPet'); 
     } else {
-      Alert.alert('Erro', result.message);
+      Alert.alert('Erro', result.error.message || 'Ocorreu um erro ao salvar os dados.');
     }
-  };
-
-  const handleSave = async () => {
-    const data = { nome, email, cpf, telefone, endereco };
-   /* if (!description) {
-      Alert.alert("Erro", "Por favor, preencha o campo de descrição.");
-      return;
-    }
-    */
-
-    if (id) {
-      const response = await updateBrand(id, { data });
-      console.log(response);
-    } else {
-      const response = await createBrand({ data, id_usuario: user.id });
-      console.log(response);
-    }
-
-    navigation.goBack();
   };
 
   const cancelarAlteracoes = () => {
@@ -177,7 +180,7 @@ export default function User() {
               />
               <PIDButton 
                 title='Salvar' 
-                onPress={handleSave} 
+                onPress={salvarDados} 
               />
             </View>  
           </>

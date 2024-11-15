@@ -1,18 +1,24 @@
 import { supabase } from './supabase';
 
-export async function registerPet(petData) {
-  const { nome, especie, raca, dataNascimento, sexo, petCastrado } = petData;
-  
+export const registerPet = async (petData) => {
   try {
+    const { data: user, error: authError } = await supabase.auth.getUser();
 
-    const user = supabase.auth.user();
-
-    if (!user) {
-      return { success: false, message: "Usuário não autenticado." };
+    if (authError) {
+      console.error("Erro ao obter o usuário autenticado:", authError.message);
+      return { success: false, error: 'Usuário não autenticado' };
     }
 
-    const { error: dbError, data: petData } = await supabase
-      .from('pets')
+    if (!user) {
+      return { success: false, error: 'Usuário não autenticado' };
+    }
+
+    console.log("Usuário autenticado:", user);
+
+    const { nome, especie, raca, dataNascimento, sexo, petCastrado, fotoPerfil } = petData;
+
+    const { data: pet, error: petError } = await supabase
+      .from('pet')
       .insert([
         {
           nome,
@@ -21,17 +27,22 @@ export async function registerPet(petData) {
           dataNascimento,
           sexo,
           petCastrado,
-          id_usuario: user.id,  // será que utiliza o id_usuario ou id_pet?
+          fotoPerfil,
+          id_usuario: user.id, 
         },
       ])
-      .select();  
+      .single();
 
-    if (dbError) {
-      return { success: false, message: dbError.message };
+    if (petError) {
+      console.error("Erro ao inserir no banco:", petError);
+      throw petError;
     }
 
-    return { success: true, message: "Pet registrado com sucesso!" };
+    console.log("Pet registrado com sucesso:", pet);
+    return { success: true, pet };
+
   } catch (error) {
-    return { success: false, message: error.message };
+    console.error('Erro ao registrar o pet: ', error);
+    return { success: false, error: error.message };
   }
-}
+};
