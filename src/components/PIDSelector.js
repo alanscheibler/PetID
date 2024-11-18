@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
-import colors from '../styles/colors'; 
+import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 
 export default function PIDSelector({ value, onValueChange, items, placeholder, style }) {
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.colors.componentBG,
     height: 40,
     justifyContent: 'center',
-    alignItems: 'flex-start',
+    alignItems: 'flex-start', 
   },
   selectorText: {
     fontSize: 16,
