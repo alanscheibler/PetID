@@ -17,3 +17,6 @@ export default function VaccinationCard() {
 }
 
 const styles = StyleSheet.create({})
+
+
+
