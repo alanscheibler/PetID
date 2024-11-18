@@ -11,6 +11,9 @@ import { useAuth } from '../context/AuthContext';
 import PIDTextInput from '../components/PIDTextInput';
 import PIDButton from '../components/PIDButton';
 import PIDCheckMarker from '../components/PIDCheckMarker';
+import PIDSelector from '../components/PIDSelector';
+
+import colors from '../styles/colors';
 
 export default function RegisterPet() {
   const { user } = useAuth(); 
@@ -77,8 +80,16 @@ export default function RegisterPet() {
           <PIDTextInput placeholder='Nome' value={nome} onChangeText={setNome} />
           <PIDTextInput placeholder='Espécie' value={especie} onChangeText={setEspecie} />
           <PIDTextInput placeholder='Raça' value={raca} onChangeText={setRaca} />
-          <PIDTextInput placeholder='Data de nascimento' value={dataNascimento} onChangeText={setDataNascimento} />
-          <PIDTextInput placeholder='Sexo' value={sexo} onChangeText={setSexo} />
+          <PIDTextInput placeholder='Data de nascimento' value={dataNascimento} onChangeText={setDataNascimento} isDate={true}/>
+          <PIDSelector
+            value={sexo}
+            onValueChange={setSexo}
+            items={[
+              { label: 'Fêmea', value: 'femea' },
+              { label: 'Macho', value: 'macho' },
+            ]}
+            placeholder={{ label: 'Selecione o Sexo', value: null }}
+          />
 
           <View style={globalStyles.rowContainer}>
             <PIDCheckMarker 
@@ -106,3 +117,4 @@ export default function RegisterPet() {
     </ScrollView>
   );
 }
+

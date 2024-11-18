@@ -39,7 +39,7 @@ export default function Login() {
         <StatusBar style="auto" />
         <Image source={require('../assets/img/LogoTitulo.png')} style={globalStyles.image} />
         <PIDTextInput placeholder="E-mail" value={email} onChangeText={setEmail} />
-        <PIDTextInput placeholder="Senha" value={senha} secureTextEntry onChangeText={setSenha} />
+        <PIDTextInput placeholder="Senha" value={senha} secureTextEntry onChangeText={setSenha} isPassword={true} />
 
         <View style={globalStyles.rowContainer}>
           <PIDTextLink title="Esqueci minha senha" onPress={() => navigation.navigate('ForgotPassword')} />

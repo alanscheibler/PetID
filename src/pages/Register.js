@@ -56,8 +56,8 @@ export default function Register() {
         <PIDTextInput placeholder='CPF' value={cpf} onChangeText={setCpf} />
         <PIDTextInput placeholder='Telefone*' value={telefone} onChangeText={setTelefone} />
         <PIDTextInput placeholder='Endereço*' value={endereco} onChangeText={setEndereco} />
-        <PIDTextInput placeholder='Senha' value={senha} secureTextEntry onChangeText={setSenha} />
-        <PIDTextInput placeholder='Confirme sua senha' value={confirmarSenha} secureTextEntry onChangeText={setConfirmarSenha} />
+        <PIDTextInput placeholder='Senha' value={senha} secureTextEntry onChangeText={setSenha} isPassword={true}/>
+        <PIDTextInput placeholder='Confirme sua senha' value={confirmarSenha} secureTextEntry onChangeText={setConfirmarSenha} isPassword={true}/>
 
         <View style={globalStyles.containerLeft}>
           <PIDCheckMarker title='Desejo receber as notificações' />
