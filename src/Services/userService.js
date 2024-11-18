@@ -46,9 +46,9 @@ export async function loginUser(email, senha) {
       });
   
       if (authError) {
-        throw new Error(authError.message);
+        return { success: false, message: "E-mail ou senha incorretos. Verifique e tente novamente." };
       }
-
+  
       const { data: userData, error: userError } = await supabase
         .from('usuario')
         .select('*')
@@ -56,7 +56,7 @@ export async function loginUser(email, senha) {
         .single();
         
       if (userError) {
-        throw new Error(userError.message);
+        throw new Error(userError.message || "Erro ao buscar dados do usuário.");
       }
   
       return { success: true, user: userData };

@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 
 import AppRoutes from './src/routes/AppRoutes';
-
 import { AuthProvider } from './src/context/AuthContext';
 
 SplashScreen.preventAutoHideAsync();
@@ -45,4 +43,4 @@ export default function App() {
       <AppRoutes/>
     </AuthProvider>
   );
-}
+};

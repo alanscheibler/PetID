@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
-import colors from '../styles/colors';
+import colors from '../styles/colors'; 
 import fonts from '../styles/fonts';
 
 export default function PIDSelector({ value, onValueChange, items, placeholder, style }) {
@@ -14,12 +14,15 @@ export default function PIDSelector({ value, onValueChange, items, placeholder, 
   const handleSelect = (item) => {
     setSelectedValue(item.value);
     onValueChange(item.value);
-    setIsOpen(false); 
+    setIsOpen(false);
   };
 
   return (
-    <View style={styles.selectorContainer}>
-      <TouchableOpacity style={styles.selector} onPress={toggleDropdown}>
+    <View style={[styles.selectorContainer, style]}>
+      <TouchableOpacity
+        style={[styles.selector, isOpen && styles.selectorFocused]} 
+        onPress={toggleDropdown}
+      >
         <Text style={[styles.selectorText, !selectedValue && styles.placeholderText]}>
           {selectedValue ? items.find(item => item.value === selectedValue)?.label : placeholder.label}
         </Text>
@@ -31,7 +34,8 @@ export default function PIDSelector({ value, onValueChange, items, placeholder, 
             <TouchableOpacity
               key={item.value}
               style={styles.menuItem}
-              onPress={() => handleSelect(item)}>
+              onPress={() => handleSelect(item)}
+            >
               <Text style={styles.menuItemText}>{item.label}</Text>
             </TouchableOpacity>
           ))}
@@ -44,45 +48,39 @@ export default function PIDSelector({ value, onValueChange, items, placeholder, 
 const styles = StyleSheet.create({
   selectorContainer: {
     width: '100%',
-    height: 40,
     marginBottom: 20,
-    paddingHorizontal: 64,
+    paddingHorizontal: 64, // Padding das bordas
   },
   selector: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    fontSize: fonts.size.medium,
-    fontFamily: fonts.families.light,
-    borderRadius: 8,
-    backgroundColor: colors.colors.componentBG,
     height: 40,
     justifyContent: 'center',
-    alignItems: 'flex-start', 
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'transparent',
+    backgroundColor: colors.colors.componentBG,
+  },
+  selectorFocused: {
+    borderColor: colors.colors.green,
   },
   selectorText: {
-    fontSize: 16,
+    fontSize: fonts.size.medium,
     color: 'black',
   },
   placeholderText: {
     color: 'gray',
   },
   dropdownMenu: {
-    position: 'absolute',
-    top: 40,
-    left: 0,
-    right: 0,
     backgroundColor: colors.colors.componentBG,
     borderRadius: 8,
-    marginHorizontal: 64,
-    zIndex: 999,
+    elevation: 3,
+    paddingHorizontal: 16, // Mesma proporção do selector
   },
   menuItem: {
     paddingVertical: 12,
-    paddingHorizontal: 10,
   },
   menuItemText: {
-    fontSize: 16,
+    fontSize: fonts.size.medium,
     color: colors.colors.text,
   },
 });

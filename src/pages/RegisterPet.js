@@ -67,7 +67,7 @@ export default function RegisterPet() {
   };
   
   return (
-    <ScrollView style={globalStyles.scrollContainer}>
+    <ScrollView style={styles.scrollContainer}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={globalStyles.container}>
           <StatusBar style="auto" />
@@ -116,5 +116,13 @@ export default function RegisterPet() {
       </TouchableWithoutFeedback>
     </ScrollView>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  scrollContainer: {
+    backgroundColor: colors.colors.background,
+    paddingTop: 40,
+},
+
+})
 

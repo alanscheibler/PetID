@@ -24,14 +24,38 @@ export default function Register() {
 
   const handleCancel = () => navigation.navigate('Login');
 
-  const handleRegister = async () => {
+  const validateEmail = (email) => {
+    const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return re.test(email);
+  };
+
+  const validateFields = () => {
+    if (!nome || !email || !senha || !confirmarSenha) {
+      Alert.alert("Erro", "Por favor, preencha todos os campos obrigatórios.");
+      return false;
+    }
+    
+    if (!validateEmail(email)) {
+      Alert.alert("Erro", "O email informado é inválido.");
+      return false;
+    }
+
     if (senha !== confirmarSenha) {
-      Alert.alert("As senhas não coincidem!");
+      Alert.alert("Erro", "As senhas não coincidem!");
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleRegister = async () => {
+    if (!validateFields()) {
       return;
     }
-  
+
     const userData = { nome, email, cpf, telefone, endereco, senha };
     const result = await registerUser(userData);
+    
     if (result.success) {
       Alert.alert(result.message, "Verifique seu email.");
       navigation.navigate('Login');
@@ -45,7 +69,7 @@ export default function Register() {
     <ScrollView style={globalStyles.scrollContainer}>
       <StatusBar style="auto" />
 
-      <View style={{ justifyContent: 'center', alignItems: 'center',paddingTop: 60, paddingBottom: 30 }}>
+      <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 60, paddingBottom: 30 }}>
         <Image 
           source={require('../assets/img/LogoTitulo.png')}
           style={globalStyles.image} 
@@ -54,8 +78,8 @@ export default function Register() {
         <PIDTextInput placeholder='Nome' value={nome} onChangeText={setNome} />
         <PIDTextInput placeholder='E-mail' value={email} onChangeText={setEmail} />
         <PIDTextInput placeholder='CPF' value={cpf} onChangeText={setCpf} />
-        <PIDTextInput placeholder='Telefone*' value={telefone} onChangeText={setTelefone} />
-        <PIDTextInput placeholder='Endereço*' value={endereco} onChangeText={setEndereco} />
+        <PIDTextInput placeholder='Telefone' value={telefone} onChangeText={setTelefone} />
+        <PIDTextInput placeholder='Endereço' value={endereco} onChangeText={setEndereco} />
         <PIDTextInput placeholder='Senha' value={senha} secureTextEntry onChangeText={setSenha} isPassword={true}/>
         <PIDTextInput placeholder='Confirme sua senha' value={confirmarSenha} secureTextEntry onChangeText={setConfirmarSenha} isPassword={true}/>
 
@@ -65,6 +89,7 @@ export default function Register() {
             <PIDTextLink title='termos de uso' underlined />
           </PIDCheckMarker>
         </View>
+
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '80%', paddingHorizontal: 20 }}>
           <View style={{ flex: 1, marginRight: 10 }}>
             <PIDButton title='Cancelar' outline onPress={handleCancel} />

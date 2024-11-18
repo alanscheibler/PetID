@@ -1,34 +1,32 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, TouchableWithoutFeedback, View, Keyboard, Image, Alert } from 'react-native';
+import { View, Image, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { globalStyles } from '../styles/globalStyles';
-
-import { loginUser } from '../Services/userService'; 
+import { loginUser } from '../Services/userService';
 import PIDTextInput from '../components/PIDTextInput';
 import PIDButton from '../components/PIDButton';
 import PIDTextLink from '../components/PIDTextLink';
-
 import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
   const navigation = useNavigation();
-
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-
-  const {setUser} = useAuth();
+  const { setUser } = useAuth();
 
   const handleLogin = async () => {
     const result = await loginUser(email, senha);
 
     if (result.success) {
-      console.log(result.user)
-      setUser(result.user)
-      console.log("Login bem-sucedido:", result.user);
-       navigation.navigate('TelaInicialPet'); 
+      setUser(result.user);
+      Alert.alert("Sucesso", "Login realizado com sucesso!", [
+        {
+          text: "OK",
+          onPress: () => navigation.navigate('TelaInicialPet'),
+        },
+      ]);
     } else {
-      console.log("Erro de login:", result.message);
       Alert.alert("Erro ao realizar login", result.message);
     }
   };
@@ -43,10 +41,7 @@ export default function Login() {
 
         <View style={globalStyles.rowContainer}>
           <PIDTextLink title="Esqueci minha senha" onPress={() => navigation.navigate('ForgotPassword')} />
-          <PIDButton title="Entrar" 
-          onPress={handleLogin} 
-          //onPress={() => navigation.navigate('TelaInicialPet')}  
-          />
+          <PIDButton title="Entrar" onPress={handleLogin} />
         </View>
 
         <View style={globalStyles.footerContainer}>

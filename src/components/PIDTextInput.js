@@ -14,13 +14,13 @@ export default function PIDTextInput({ isDate, isPassword, value, onChangeText, 
             {isDate ? (
                 <TextInputMask
                     type={'custom'}
-                    options={{ mask: '99/99/9999' }}  // Máscara de data DD/MM/YYYY
+                    options={{ mask: '99/99/9999' }} 
                     style={[styles.input, isFocused && styles.inputFocused]}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
                     keyboardType="numeric"
-                    value={value} // Passando o valor da data
-                    onChangeText={onChangeText} // Passando o onChangeText para capturar a mudança
+                    value={value}
+                    onChangeText={onChangeText}
                     {...rest}
             />
             ) : isPassword ? (
