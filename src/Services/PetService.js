@@ -1,6 +1,8 @@
 import { supabase } from './supabase';
 
-export const registerPet = async (petData) => {
+export async function registerPet(petData) {
+  const { nome, especie, raca, dataNascimento, sexo, petCastrado, fotoPerfil } = petData;
+
   try {
     const { data: user, error: authError } = await supabase.auth.getUser();
 
@@ -13,10 +15,6 @@ export const registerPet = async (petData) => {
       return { success: false, error: 'Usuário não autenticado' };
     }
 
-    console.log("Usuário autenticado:", user);
-
-    const { nome, especie, raca, dataNascimento, sexo, petCastrado, fotoPerfil } = petData;
-
     const { data: pet, error: petError } = await supabase
       .from('pet')
       .insert([
@@ -28,7 +26,7 @@ export const registerPet = async (petData) => {
           sexo,
           petCastrado,
           fotoPerfil,
-          id_usuario: user.id, 
+          id_usuario: user.user.id, 
         },
       ])
       .single();
@@ -38,11 +36,69 @@ export const registerPet = async (petData) => {
       throw petError;
     }
 
-    console.log("Pet registrado com sucesso:", pet);
     return { success: true, pet };
 
   } catch (error) {
     console.error('Erro ao registrar o pet: ', error);
     return { success: false, error: error.message };
   }
+};
+
+export async function getPetData(id) {
+  try {
+    const { data, error } = await supabase.from('pet').select('*').eq("id_pet", id).single();
+    if (error) {
+      throw new Error(error.message);
+    }
+    return { success: true, data };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+}
+
+export async function updatePetData(id_pet, updateData) {
+  const { data, error } = await supabase
+    .from("pet")
+    .update(updateData)
+    .eq("id_pet", id_pet)
+    .select();
+
+  if (error) {
+    console.log("Erro ao atualizar dados:", error.message);
+    return { success: false, error };
+   }
+      
+  console.log("Dados atualizados com sucesso:", data);
+  return { success: true, data };
+}
+
+export async function deletePetData(id) {
+  const { data, error } = await supabase.from("pet").delete().eq("id_pet", id);
+
+  return { data, error };
+}
+
+export async function uploadPhoto (uri, usuario) {
+  const fileExt = uri.split('.').pop(); 
+  const fileName = `${usuario.id_usuario}_foto.${fileExt}`; 
+
+  console.log(fileExt, fileName, uri)
+
+  const response = await fetch(uri);
+  const blob = await response.blob(); 
+
+  const { data, error } = await supabase.storage
+    .from('petId') 
+    .upload(fileName, blob, { contentType: `image/${fileExt}` });
+
+  if (error) {
+    console.error("Erro no upload:", error.message);
+    return null;
+  }
+
+  const publicURL = supabase.storage
+    .from('petId')
+    .getPublicUrl(fileName).publicURL;
+
+  return publicURL; 
 };

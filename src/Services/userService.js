@@ -93,15 +93,17 @@ export async function updateUserData(id_usuario, updateData) {
   return { success: true, data };
 }
 
-const uploadPhoto = async (uri, usuario) => {
+export async function uploadPhoto (uri, usuario) {
   const fileExt = uri.split('.').pop(); 
   const fileName = `${usuario.id_usuario}_foto.${fileExt}`; 
+
+  console.log(fileExt, fileName, uri)
 
   const response = await fetch(uri);
   const blob = await response.blob(); 
 
   const { data, error } = await supabase.storage
-    .from('perfil-fotos') 
+    .from('petId') 
     .upload(fileName, blob, { contentType: `image/${fileExt}` });
 
   if (error) {
@@ -110,9 +112,8 @@ const uploadPhoto = async (uri, usuario) => {
   }
 
   const publicURL = supabase.storage
-    .from('perfil-fotos')
+    .from('petId')
     .getPublicUrl(fileName).publicURL;
 
   return publicURL; 
 };
-
