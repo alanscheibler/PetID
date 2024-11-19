@@ -1,44 +1,187 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import PIDHeader from '../components/PIDHeader'
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { updatePetData, deletePetData, getPetData } from '../Services/PetService';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, Image, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import PIDHeader from '../components/PIDHeader';
+import { getPetData } from '../Services/PetService';
+import colors from '../styles/colors';
+import PIDFooterBar from '../components/PIDFooterBar';
+import PIDModal from '../components/PIDModal';  // Importe o modal
+import { globalStyles } from '../styles/globalStyles';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 export default function VaccinationCard() {
   const navigation = useNavigation();
-  const backButtonPress = () => {navigation.navigate('TelaInicialPet')}
+  const route = useRoute();
+  const { petId } = route.params;
+  const [petData, setPetData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [isModalVisible, setModalVisible] = useState(false); // Controla a visibilidade do modal
+
+  useEffect(() => {
+    const fetchPetData = async () => {
+      const { success, data, message } = await getPetData(petId);
+
+      if (success) {
+        setPetData(data);
+      } else {
+        console.error("Erro ao buscar dados do pet:", message);
+      }
+
+      setLoading(false);
+    };
+
+    fetchPetData();
+  }, [petId]);
+
+  const calculateAge = (birthDate) => {
+    if (!birthDate) return "Desconhecida";
+    const today = new Date();
+    const birth = new Date(birthDate);
+    const ageInYears = today.getFullYear() - birth.getFullYear();
+    return ageInYears > 0 ? `${ageInYears} ano(s)` : "Menos de 1 ano";
+  };
+
+  const backButtonPress = () => {
+    navigation.navigate('TelaInicialPet');
+  };
+
+  const handlePetCardPress = () => {
+    navigation.navigate('PetDetails', { petId });
+  };
+
+  const onLeftPress = () => {
+    navigation.navigate('Map');
+  };
+
+  const onRightPress = () => {
+    setModalVisible(true); // Exibe o modal quando o botão direito for pressionado
+  };
+
+  const handleModalClose = () => {
+    setModalVisible(false); // Fecha o modal
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
+  if (!petData) {
+    return (
+      <View style={styles.container}>
+        <Text>Erro ao carregar os dados do pet.</Text>
+      </View>
+    );
+  }
+
   return (
-    <View>
-      <PIDHeader 
-        showBackButton 
-        backButtonPress={backButtonPress}/>
-      <Text>VaccinationCard</Text>
+    <View style={styles.container}>
+      <PIDHeader showBackButton backButtonPress={backButtonPress} />
+
+      <TouchableOpacity style={styles.petCardContainer} onPress={handlePetCardPress}>
+        <View style={[styles.petImageContainer, !petData.fotoPerfil && styles.noPhotoBackground]}>
+          {petData.fotoPerfil ? (
+            <Image source={{ uri: petData.fotoPerfil }} style={styles.petImage} />
+          ) : (
+            <Text style={styles.noPhotoText}>Sem Foto</Text>
+          )}
+        </View>
+
+        <View style={styles.infoRow}>
+          <Text style={styles.infoText}>
+            <Text style={styles.label}>Nome: </Text>{petData.nome || "Desconhecido"}
+          </Text>
+          <Text style={styles.infoText}>
+            <Text style={styles.label}>Espécie: </Text>{petData.especie || "Desconhecida"}
+          </Text>
+        </View>
+
+        <View style={styles.infoRow}>
+          <Text style={styles.infoText}>
+            <Text style={styles.label}>Idade: </Text>{calculateAge(petData.dataNascimento)}
+          </Text>
+          <Text style={styles.infoText}>
+            <Text style={styles.label}>Sexo: </Text>{petData.sexo || "Desconhecido"}
+          </Text>
+        </View>
+      </TouchableOpacity>
+
+      <PIDModal visible={isModalVisible} onClose={handleModalClose} onSave={(data) => console.log(data)} />
+
+      <View style={styles.footerContainer}>
+        <PIDFooterBar
+          leftIcon={<FontAwesome6 name="map-location-dot" style={globalStyles.icon} />}
+          leftAction={onLeftPress}
+          rightIcon={<FontAwesome6 name="add" style={globalStyles.icon} />}
+          rightAction={onRightPress}
+        />
+      </View>
     </View>
-  )
+  );
 }
 
- // UTILIZAR PARA CARTERINHA (registerPet)
-    // const handlePetDelete = async (pet) => {
-    //   await deletePetData(pet.id_pet);
-    //   getData();
-    // };
-
-    
-    // const handlePetEdit = async (pet) => {
-    //   await updatePetData(pet.id_pet);
-    //   getData();
-    // };
-
-    // UTILIZAR PARA CARTERINHA (registerVacina)
-    // const handleVacinaDelete = async (vacina) => {
-    //   await deleteVacinaData(vacina.id_vacina);
-    //   getData();
-    // };
-
-    
-    // const handleVacinaEdit = async (vacina) => {
-    //   await updateVacinaData(vacina.id_vacina);
-    //   getData();
-    // };
-
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.colors.background,
+    flex: 1,
+    paddingTop: 0,
+    justifyContent: 'flex-start',  
+  },
+  petCardContainer: {
+    backgroundColor: colors.colors.componentBG,
+    width: '90%',
+    marginVertical: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    alignSelf: 'center',  
+  },
+  petImageContainer: {
+    width: '100%',
+    height: 200,
+    borderRadius: 8,
+    overflow: 'hidden', 
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  petImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  noPhotoBackground: {
+    backgroundColor: '#ccc', 
+  },
+  noPhotoText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  infoRow: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 16,
+    marginVertical: 8,
+  },
+  infoText: {
+    color: colors.colors.green,
+    fontSize: 18,
+    width: '45%',  
+  },
+  label: {
+    color: colors.colors.text,
+    fontWeight: 'bold',
+  },
+  footerContainer: {
+    flexDirection: 'row',          
+    justifyContent: 'center',     
+    alignItems: 'center',        
+    width: '100%',                
+    position: 'absolute',        
+    bottom: 0,
+  }
+});

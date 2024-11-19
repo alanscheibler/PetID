@@ -14,6 +14,7 @@ import RegisterPet from "../pages/RegisterPet";
 import TelaInicialPet from "../pages/TelaInicialPet";
 import User from "../pages/User";
 import VaccinationCard from "../pages/VaccinationCard";
+import PetDetails from "../pages/PetDetails";
 
 const AppStack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -45,6 +46,11 @@ const AppNavigator = () => {
             <AppStack.Screen
                 name='VaccinationCard' 
                 component={VaccinationCard}
+                options={{ headerShown: false }}
+            />
+            <AppStack.Screen
+                name='PetDetails' 
+                component={PetDetails}
                 options={{ headerShown: false }}
             />
         </AppStack.Navigator>

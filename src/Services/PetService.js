@@ -112,9 +112,9 @@ export async function getPetsByUser() {
     }
 
     const { data: pets, error } = await supabase
-      .from('pet') // Nome da tabela
-      .select('*') // Seleciona todos os campos
-      .eq('id_usuario', user.user.id); // Filtra pelo ID do usuário
+      .from('pet')
+      .select('*')
+      .eq('id_usuario', user.user.id);
 
     if (error) {
       console.error("Erro ao buscar pets:", error.message);
