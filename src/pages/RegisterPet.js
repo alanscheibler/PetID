@@ -22,7 +22,7 @@ export default function RegisterPet() {
   const [nome, setNome] = useState('');
   const [especie, setEspecie] = useState('');
   const [raca, setRaca] = useState('');
-  const [dataNascimento, setDataNascimento] = useState('');
+  const [dataNascimento, setDataNascimento] = useState('12/12/2012');
   const [sexo, setSexo] = useState('');
   const [petCastrado, setPetCastrado] = useState(false);
   const [fotoPerfil, setFotoPerfil] = useState(null);
@@ -34,35 +34,42 @@ export default function RegisterPet() {
       aspect: [1, 1],
       quality: 1,
     });
+
     if (!result.cancelled) {
-      setFotoPerfil(result.uri);
+      setFotoPerfil(result.assets[0].uri);
+
+      const imageUrl = await uploadPetPhoto(result.assets[0].uri, pet);
+  
+      if (imageUrl) {
+        const updatedUser = await updatePetData(pet.id_pet, { fotoPerfil: imageUrl });
+  
+        if (updatedUser.success) {
+          Alert.alert('Foto de perfil atualizada com sucesso!');
+        } else {
+          Alert.alert('Erro', 'Ocorreu um erro ao atualizar a foto de perfil.');
+        }
+      } else {
+        Alert.alert('Erro', 'Falha ao fazer upload da imagem.');
+      }
     }
   };
 
   const handleCancel = () => navigation.navigate('TelaInicialPet');
 
   const handleRegister = async () => {
-    console.log("Handle Register iniciado");
-  
-    if (!user) {
-      Alert.alert('Erro', 'Você precisa estar logado para registrar um pet.');
-      return;
-    }
-  
-    console.log("Usuário encontrado:", user); 
-  
-    const petData = { nome, especie, raca, dataNascimento, sexo, petCastrado };
-    console.log("Dados do pet:", petData);
-  
-    const result = await registerPet(petData);
-    console.log("Resultado do registro:", result);
-  
-    if (result.success) {
-      Alert.alert('Pet registrado com sucesso!');
-      navigation.goBack();
-    } else {
-      console.error("Erro ao registrar o pet: ", result.error);
-      Alert.alert('Erro', 'Não foi possível registrar o pet.');
+    try {
+      const petData = { nome, especie, raca, dataNascimento, sexo, petCastrado, fotoPerfil };
+      const result = await registerPet(petData);
+
+      if (result.success) {
+        Alert.alert('Pet registrado com sucesso!');
+        navigation.goBack();
+      } else {
+        console.error("Erro ao registrar o pet: ", result.error);
+        Alert.alert('Erro', 'Não foi possível registrar o pet.');
+      }
+    } catch (error) {
+      console.log(error)
     }
   };
   

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, TouchableWithoutFeedback, View, Keyboard, Image, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import { getUserData, updateUserData } from '../Services/userService'; 
+import { getUserData, updateUserData, uploadPhoto } from '../Services/userService'; 
 
 import colors from '../styles/colors';
 import PIDChangeInput from '../components/PIDChangeInput';
