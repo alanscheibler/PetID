@@ -102,3 +102,28 @@ export async function uploadPhoto (uri, usuario) {
 
   return publicURL; 
 };
+export async function getPetsByUser() {
+  try {
+    const { data: user, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      console.error("Erro ao obter o usuário autenticado:", authError?.message);
+      return { success: false, error: 'Usuário não autenticado' };
+    }
+
+    const { data: pets, error } = await supabase
+      .from('pet') // Nome da tabela
+      .select('*') // Seleciona todos os campos
+      .eq('id_usuario', user.user.id); // Filtra pelo ID do usuário
+
+    if (error) {
+      console.error("Erro ao buscar pets:", error.message);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, data: pets };
+  } catch (error) {
+    console.error("Erro ao buscar pets:", error.message);
+    return { success: false, error: error.message };
+  }
+}
