@@ -15,10 +15,11 @@ import TelaInicialPet from "../pages/TelaInicialPet";
 import User from "../pages/User";
 import VaccinationCard from "../pages/VaccinationCard";
 import PetDetails from "../pages/PetDetails";
+import TermsOfUse from "../pages/TermsOfUse"; // Importando a página de Termos de Uso
+import colors from "../styles/colors";
 
 const AppStack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
-
 
 const AppNavigator = () => {
     return(
@@ -75,6 +76,17 @@ const AuthNavigator = () => {
                 component={Register}
                 options={{ headerShown: false }}
             />
+            <AuthStack.Screen
+                name='TermsOfUse'
+                component={TermsOfUse}
+                options={{
+                    title: "Termos de Uso", 
+                    headerTitleAlign: 'center',
+                    headerStyle: {
+                      backgroundColor: colors.colors.background,
+                    },
+                }}
+            />
         </AuthStack.Navigator>
     );
 };
@@ -118,4 +130,4 @@ export default function AppRoutes() {
         {user ? <AppNavigator /> : <AuthNavigator />}
       </NavigationContainer>
     );
-  }
+}
