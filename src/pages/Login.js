@@ -31,10 +31,10 @@ export default function Login() {
     }
   };
 
-  return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={[globalStyles.container, { paddingTop: 160 }]}>
-        <StatusBar style="auto" />
+return (
+  <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={[globalStyles.container, { paddingTop: '45%'}]}>
+      <StatusBar style="auto" />
         <Image source={require('../assets/img/LogoTitulo.png')} style={globalStyles.image} />
         <PIDTextInput placeholder="E-mail" value={email} onChangeText={setEmail} />
         <PIDTextInput placeholder="Senha" value={senha} secureTextEntry onChangeText={setSenha} isPassword={true} />
@@ -44,10 +44,10 @@ export default function Login() {
           <PIDButton title="Entrar" onPress={handleLogin} />
         </View>
 
-        <View style={globalStyles.footerContainer}>
-          <PIDTextLink title="Crie sua Conta" underlined={true} onPress={() => navigation.navigate('Register')} />
-        </View>
+      <View style={[globalStyles.container, { paddingTop: '50%' }]}>
+        <PIDTextLink title="Crie sua conta" underlined={true} onPress={() => navigation.navigate('Register')} />
       </View>
-    </TouchableWithoutFeedback>
-  );
+    </View>
+  </TouchableWithoutFeedback>
+);
 }
