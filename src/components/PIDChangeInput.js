@@ -4,7 +4,7 @@ import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-export default function PIDChangeInput({icon, editOnPress, ...rest}) {
+export default function PIDChangeInput({ icon = "pencil", ...rest }) {
     const [isFocused, setIsFocused] = useState(false);
 
     return (
@@ -16,20 +16,24 @@ export default function PIDChangeInput({icon, editOnPress, ...rest}) {
                 placeholder={"Digite algo..."}
                 {...rest}
             />
-            <Ionicons name="pencil" style={styles.icon} />
+            <Ionicons 
+                name={icon} 
+                style={styles.icon} 
+            />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        width: '100%', 
-        justifyContent: 'center', 
+        width: '100%',
         position: 'relative',
+        marginBottom: 12, 
+        paddingHorizontal: 64, 
+        paddingVertical: 4,
     },
-
     input: {
-        width: '100%', 
+        width: '100%',
         height: 40,
         fontSize: fonts.size.medium,
         fontFamily: fonts.families.light,
@@ -42,18 +46,16 @@ const styles = StyleSheet.create({
         paddingVertical: 0, 
         elevation: 0.5,
     },
-
     inputFocused: {
         borderColor: colors.colors.green,
         borderWidth: 2, 
     },
-
     icon: {
         position: 'absolute',
-        right: 16,
-        top: '50%',
-        transform: [{ translateY: -12 }], 
-        fontSize: 16,
+        right: 70,
+        top: '65%',
+        transform: [{ translateY: -12 }],
+        fontSize: 18, 
         color: colors.colors.green,
-    }
+    },
 });
