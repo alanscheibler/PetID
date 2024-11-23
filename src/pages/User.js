@@ -118,51 +118,36 @@ export default function User() {
               <FontAwesome5 name="user-alt" style={styles.icon} />
             )}
 
-            <View style={styles.inputContainer}>
-              <PIDChangeInput 
-                placeholder={'Nome'} 
-                value={nome} 
-                onChangeText={setNome}
-                editOnPress={handleEdit}
-              />
-            </View>
-
-            <View style={styles.inputContainer}>
-              <PIDChangeInput 
-                placeholder={'E-mail'} 
-                value={email} 
-                onChangeText={setEmail}
-                editOnPress={handleEdit}
-              />
-            </View>
-
-            <View style={styles.inputContainer}>
-              <PIDChangeInput 
-                placeholder={'CPF'} 
-                value={cpf} 
-                onChangeText={setCpf}
-                editOnPress={handleEdit}
-              />
-            </View>
-
-            <View style={styles.inputContainer}>
-              <PIDChangeInput 
-                placeholder={'Telefone'} 
-                value={telefone} 
-                onChangeText={setTelefone}
-                editOnPress={handleEdit}
-              />
-            </View>
-
-            <View style={styles.inputContainer}>
-              <PIDChangeInput 
-                placeholder={'Endereço'}
-                value={endereco} 
-                onChangeText={setEndereco}
-                editOnPress={handleEdit}
-              />
-            </View>
-
+            <PIDChangeInput 
+              placeholder={'Nome'} 
+              value={nome} 
+              onChangeText={setNome}
+              editOnPress={handleEdit}
+            />
+            <PIDChangeInput 
+              placeholder={'E-mail'} 
+              value={email} 
+              onChangeText={setEmail}
+              editOnPress={handleEdit}
+            />
+            <PIDChangeInput 
+              placeholder={'CPF'} 
+              value={cpf} 
+              onChangeText={setCpf}
+              editOnPress={handleEdit}
+            />
+            <PIDChangeInput 
+              placeholder={'Telefone'} 
+              value={telefone} 
+              onChangeText={setTelefone}
+              editOnPress={handleEdit}
+            />
+            <PIDChangeInput 
+              placeholder={'Endereço'}
+              value={endereco} 
+              onChangeText={setEndereco}
+              editOnPress={handleEdit}
+            />
             <View style={styles.buttonContainer}>
               <PIDButton 
                 title='Alterar Foto' 
@@ -171,7 +156,6 @@ export default function User() {
                 size='big'
               />
             </View>  
-
             <View style={styles.buttonContainer}>
               <PIDButton 
                 title='Cancelar' 
@@ -203,13 +187,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     resizeMode: 'contain',
     marginVertical: 20,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    paddingHorizontal: 64,
-    marginTop: 10, 
   },
   icon: {
     fontSize: 70,
