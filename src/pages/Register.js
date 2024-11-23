@@ -11,6 +11,7 @@ import PIDButton from '../components/PIDButton';
 import PIDCheckMarker from '../components/PIDCheckMarker';
 import PIDTextLink from '../components/PIDTextLink';
 
+
 export default function Register() {
   const navigation = useNavigation();
 
@@ -86,7 +87,7 @@ export default function Register() {
         <View style={globalStyles.containerLeft}>
           <PIDCheckMarker title='Desejo receber as notificações' />
           <PIDCheckMarker title='Concordo com os'> 
-            <PIDTextLink title='termos de uso' underlined />
+            <PIDTextLink title='termos de uso' underlined onPress={() => navigation.navigate('TermsOfUse')}/>
           </PIDCheckMarker>
         </View>
 
@@ -98,6 +99,7 @@ export default function Register() {
             <PIDButton title='Criar' onPress={handleRegister} />
           </View>
         </View>
+
       </View>
     </ScrollView>
   );
