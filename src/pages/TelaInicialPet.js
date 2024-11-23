@@ -30,6 +30,10 @@ export default function TelaInicialPet() {
     };
 
     fetchPets();
+
+    const interval = setInterval(fetchPets, 3000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const handleProfilePress = () => {
