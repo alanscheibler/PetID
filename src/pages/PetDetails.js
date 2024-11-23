@@ -229,6 +229,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.colors.background,
     paddingVertical: 104,
+    paddingHorizontal: 64,
   },
   image: {
     width: 100,
@@ -246,12 +247,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
-    paddingHorizontal: 64,
+
     marginTop: 10, 
   },
   buttonContainer: {
     width: '100%',
-    paddingHorizontal: 64,
     marginTop: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',

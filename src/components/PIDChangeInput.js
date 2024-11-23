@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
         width: '100%',
         position: 'relative',
         marginBottom: 12, 
-        paddingHorizontal: 64, 
         paddingVertical: 4,
     },
     input: {
@@ -52,7 +51,7 @@ const styles = StyleSheet.create({
     },
     icon: {
         position: 'absolute',
-        right: 70,
+        right: 6,
         top: '65%',
         transform: [{ translateY: -12 }],
         fontSize: 18, 

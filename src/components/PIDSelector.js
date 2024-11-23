@@ -66,7 +66,6 @@ const styles = StyleSheet.create({
   selectorContainer: {
     width: '100%',
     marginBottom: 20,
-    paddingHorizontal: 64,
     paddingVertical: 16,
   },
   selectorContainerWithBorder: {
