@@ -3,7 +3,14 @@ import React, { useState } from 'react';
 import colors from '../styles/colors'; 
 import fonts from '../styles/fonts';
 
-export default function PIDSelector({ value, onValueChange, items, placeholder, style }) {
+export default function PIDSelector({
+  value,
+  onValueChange,
+  items,
+  placeholder,
+  style,
+  withBottomBorder = false, // Nova propriedade
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(value);
 
@@ -18,9 +25,19 @@ export default function PIDSelector({ value, onValueChange, items, placeholder, 
   };
 
   return (
-    <View style={[styles.selectorContainer, style]}>
+    <View
+      style={[
+        styles.selectorContainer,
+        withBottomBorder && styles.selectorContainerWithBorder,
+        style,
+      ]}
+    >
       <TouchableOpacity
-        style={[styles.selector, isOpen && styles.selectorFocused]} 
+        style={[
+          styles.selector,
+          withBottomBorder && !isOpen && styles.selectorWithBottomBorder,
+          isOpen && styles.selectorFocused,
+        ]}
         onPress={toggleDropdown}
       >
         <Text style={[styles.selectorText, !selectedValue && styles.placeholderText]}>
@@ -49,18 +66,25 @@ const styles = StyleSheet.create({
   selectorContainer: {
     width: '100%',
     marginBottom: 20,
-    paddingHorizontal: 64, // Padding das bordas
+    paddingHorizontal: 64,
+    paddingVertical: 16,
+  },
+  selectorContainerWithBorder: {
+    paddingVertical: 4,
   },
   selector: {
     height: 40,
     justifyContent: 'center',
     paddingHorizontal: 16,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: 'transparent',
     backgroundColor: colors.colors.componentBG,
+    borderRadius: 8,
+  },
+  selectorWithBottomBorder: {
+    borderBottomWidth: 2,
+    borderBottomColor: colors.colors.green,
   },
   selectorFocused: {
+    borderWidth: 2,
     borderColor: colors.colors.green,
   },
   selectorText: {
@@ -74,7 +98,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.colors.componentBG,
     borderRadius: 8,
     elevation: 3,
-    paddingHorizontal: 16, // Mesma proporção do selector
+    paddingHorizontal: 16,
   },
   menuItem: {
     paddingVertical: 12,
