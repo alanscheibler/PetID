@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, ActivityIndicator, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import PIDHeader from '../components/PIDHeader';
 import { getPetData } from '../Services/PetService';
 import colors from '../styles/colors';
 import PIDFooterBar from '../components/PIDFooterBar';
 import PIDModal from '../components/PIDModal';
-import { registerVacina } from '../Services/VacinaService'; // Importando a função de registro de vacina
+import { registerVacina, getVacinaData } from '../Services/VacinaService';  // Incluindo a função getVacinaData
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-
+import PIDVaccinationItem from '../components/PIDVaccinationItem'; 
 import { globalStyles } from '../styles/globalStyles';
 
 export default function VaccinationCard() {
@@ -18,6 +18,17 @@ export default function VaccinationCard() {
   const [petData, setPetData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [vacinas, setVacinas] = useState([]);
+  
+  // Função para buscar as vacinas do pet
+  const fetchVacinas = async () => {
+    const { success, data, message } = await getVacinaData(petId);
+    if (success) {
+      setVacinas(data);  // Armazenar as vacinas retornadas
+    } else {
+      console.error('Erro ao carregar vacinas:', message);
+    }
+  };
 
   useEffect(() => {
     const fetchPetData = async () => {
@@ -31,6 +42,11 @@ export default function VaccinationCard() {
     };
 
     fetchPetData();
+    fetchVacinas();  // Carregar as vacinas quando o componente é montado
+
+    // Intervalo de polling para verificar atualizações nas vacinas a cada 5 segundos
+    const intervalo = setInterval(fetchVacinas, 5000);
+    return () => clearInterval(intervalo); // Limpa o intervalo quando o componente for desmontado
   }, [petId]);
 
   const calculateAge = (birthDate) => {
@@ -62,13 +78,12 @@ export default function VaccinationCard() {
   };
 
   const onSave = async (data) => {
-    // Converte as datas para o formato ISO (YYYY-MM-DD)
     const formatDate = (date) => {
       if (!date) return null;
       const [day, month, year] = date.split('/');
       return `${year}-${month}-${day}`;
     };
-  
+
     const preparedData = {
       procedimento: data.procedimento || null,
       nome_proc: data.nome || null,
@@ -76,17 +91,17 @@ export default function VaccinationCard() {
       data_renovacao: formatDate(data.dataReforco),
       id_pet: petId,
     };
-  
+
     console.log('Dados sendo enviados para o banco:', preparedData);
-  
+
     const { success, vacina, error } = await registerVacina(preparedData);
-  
+
     if (success) {
       console.log('Vacina registrada com sucesso:', vacina);
     } else {
       console.error('Erro ao registrar vacina:', error);
     }
-  
+
     setModalVisible(false);
   };
 
@@ -109,7 +124,7 @@ export default function VaccinationCard() {
   return (
     <View style={styles.container}>
       <PIDHeader showBackButton backButtonPress={backButtonPress} />
-
+      <ScrollView style={styles.vaccineListContainer} contentContainerStyle={styles.scrollViewContent}>
       <TouchableOpacity style={styles.petCardContainer} onPress={handlePetCardPress}>
         <View style={[styles.petImageContainer, !petData.fotoPerfil && styles.noPhotoBackground]}>
           {petData.fotoPerfil ? (
@@ -142,6 +157,17 @@ export default function VaccinationCard() {
         </View>
       </TouchableOpacity>
 
+      {/* Lista rolável de vacinas */}
+
+        {vacinas.length > 0 ? (
+          vacinas.map((vacina, index) => (
+            <PIDVaccinationItem key={index} petId={petId} vacina={vacina} />
+          ))
+        ) : (
+          <Text>Sem vacinas registradas.</Text>
+        )}
+      </ScrollView>
+
       <PIDModal visible={isModalVisible} onClose={handleModalClose} onSave={onSave} />
 
       <View style={styles.footerContainer}>
@@ -161,7 +187,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.colors.background,
     flex: 1,
     paddingTop: 0,
-    justifyContent: 'flex-start',
   },
   petCardContainer: {
     backgroundColor: colors.colors.componentBG,
@@ -216,5 +241,11 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     bottom: 0,
+  },
+  vaccineListContainer: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    paddingBottom: 80,
   },
 });

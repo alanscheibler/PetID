@@ -69,13 +69,16 @@ export default function TelaInicialPet() {
         ) : (
           <Text>Nenhum pet encontrado. Cadastre um pet.</Text>
         )}
+        
       </ScrollView>
-      <PIDFooterBar
-        leftIcon={<FontAwesome6 name="map-location-dot" style={globalStyles.icon} />}
-        leftAction={onLeftPress}
-        rightIcon={<FontAwesome6 name="add" style={globalStyles.icon} />}
-        rightAction={onRightPress}
-      />
+      <View style={styles.footerContainer}>
+          <PIDFooterBar
+            leftIcon={<FontAwesome6 name="map-location-dot" style={globalStyles.icon} />}
+            leftAction={onLeftPress}
+            rightIcon={<FontAwesome6 name="add" style={globalStyles.icon} />}
+            rightAction={onRightPress}
+          />
+      </View>
     </View>
   );
 }
@@ -89,7 +92,16 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 20,
+    paddingtop: 20,
+    paddingBottom: 80,
     width: '100%',
+  },
+  footerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    position: 'absolute',
+    bottom: 0,
   },
 });
