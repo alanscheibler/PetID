@@ -1,7 +1,7 @@
 import { supabase } from './supabase';
 
 export async function registerUser(userData) {
-  const { email, senha, nome, cpf, telefone, endereco } = userData;
+  const { email, senha, nome, cpf, telefone, endereco,  receberNotificacoes, aceitaTermos  } = userData;
 
   try {
     const { data: user, error: authError } = await supabase.auth.signUp({
@@ -24,6 +24,8 @@ export async function registerUser(userData) {
           endereco,
           senha,
           id_usuario: user.user.id,
+          receberNotificacoes,
+          aceitaTermos
         },
       ])
       .select();
