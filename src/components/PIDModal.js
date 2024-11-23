@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Modal, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import PIDTextInput from './PIDTextInput';
 import PIDButton from './PIDButton';
+import PIDSelector from './PIDSelector';  // Importando o PIDSelector
 import colors from '../styles/colors';
 import { globalStyles } from '../styles/globalStyles';
 
@@ -10,6 +11,7 @@ export default function PIDModal({ visible, onClose, onSave }) {
   const [nome, setNome] = useState('');
   const [dataRealizacao, setDataRealizacao] = useState('');
   const [dataReforco, setDataReforco] = useState('');
+  const [isOther, setIsOther] = useState(false);  // Estado para controlar se é "Outro"
 
   const handleSave = () => {
     const formData = {
@@ -19,8 +21,25 @@ export default function PIDModal({ visible, onClose, onSave }) {
       dataReforco,
     };
     onSave(formData);
-    onClose(); 
+    onClose();
   };
+
+  const handleSelectorChange = (value) => {
+    if (value === 'Outro') {
+      setIsOther(true);  // Se a opção for "Outro", habilita o campo de texto
+      setProcedimento('');  // Limpa o valor do campo de procedimento
+    } else {
+      setIsOther(false);  // Se não for "Outro", usa a seleção
+      setProcedimento(value);
+    }
+  };
+
+  const options = [
+    { value: 'Antiparasitário', label: 'Antiparasitário' },
+    { value: 'Vacinas', label: 'Vacinas' },
+    { value: 'Vermifugos', label: 'Vermifugos' },
+    { value: 'Outro', label: 'Outro' }
+  ];
 
   return (
     <Modal
@@ -34,11 +53,23 @@ export default function PIDModal({ visible, onClose, onSave }) {
           <Text style={styles.title}>Adicionar Procedimento</Text>
 
           <ScrollView style={styles.formContainer}>
-            <PIDTextInput
+            {/* Usando o PIDSelector para o procedimento */}
+            <PIDSelector
               value={procedimento}
-              onChangeText={setProcedimento}
-              placeholder="Procedimento"
+              onValueChange={handleSelectorChange}
+              items={options}
+              placeholder={{ label: 'Selecione um procedimento', value: '' }}
             />
+
+            {/* Se for a opção "Outro", mostrar o PIDTextInput */}
+            {isOther && (
+              <PIDTextInput
+                value={procedimento}
+                onChangeText={setProcedimento}
+                placeholder="Descreva o procedimento"
+              />
+            )}
+
             <PIDTextInput
               value={nome}
               onChangeText={setNome}
@@ -59,10 +90,9 @@ export default function PIDModal({ visible, onClose, onSave }) {
           </ScrollView>
 
           <View style={globalStyles.rowContainer}>
-            <PIDButton title='Fechar' outline={true} onPress={onClose} />
-            <PIDButton title='Salvar' onPress={handleSave} />
+            <PIDButton title="Fechar" outline={true} onPress={onClose} />
+            <PIDButton title="Salvar" onPress={handleSave} />
           </View>
-
         </View>
       </View>
     </Modal>
@@ -88,7 +118,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
-    color: colors.colors.text
+    color: colors.colors.text,
   },
   formContainer: {
     marginBottom: 20,
