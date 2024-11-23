@@ -89,7 +89,7 @@ export default function AppRoutes() {
         if (credentials) {
           const { email, password } = JSON.parse(credentials);
           const userResponse = await loginUser(email, password);
-  
+    
           if (!userResponse.erro) {
             setUser(userResponse.user);
           }

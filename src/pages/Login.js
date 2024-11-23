@@ -17,15 +17,9 @@ export default function Login() {
 
   const handleLogin = async () => {
     const result = await loginUser(email, senha);
-
+  
     if (result.success) {
       setUser(result.user);
-      Alert.alert("Sucesso", "Login realizado com sucesso!", [
-        {
-          text: "OK",
-          onPress: () => navigation.navigate('TelaInicialPet'),
-        },
-      ]);
     } else {
       Alert.alert("Erro ao realizar login", result.message);
     }
