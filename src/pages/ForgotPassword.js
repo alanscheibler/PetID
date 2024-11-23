@@ -21,12 +21,8 @@ export default function ForgotPassoword() {
         <PIDTextInput placeholder="E-mail" value={email} onChangeText={setEmail} />
 
         <View style={styles.buttonContainer}>
-          <View style={styles.buttonWrapper}>
             <PIDButton title="Cancelar" outline={true} onPress={() => navigation.navigate('Login')} />
-          </View>
-          <View style={styles.buttonWrapper}>
             <PIDButton title="Enviar" onPress={() => navigation.navigate('Login')} />
-          </View>
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -44,12 +40,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: '80%', 
-    paddingHorizontal: 20, 
+    width: '100%', 
     marginTop: 10, 
-  },
-  buttonWrapper: {
-    flex: 1, 
-    marginHorizontal: 10, 
   },
 });

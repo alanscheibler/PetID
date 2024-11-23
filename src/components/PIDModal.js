@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Modal, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import PIDTextInput from './PIDTextInput';
 import PIDButton from './PIDButton';
-import PIDSelector from './PIDSelector';  // Importando o PIDSelector
+import PIDSelector from './PIDSelector';
 import colors from '../styles/colors';
 import { globalStyles } from '../styles/globalStyles';
 
@@ -11,7 +11,7 @@ export default function PIDModal({ visible, onClose, onSave }) {
   const [nome, setNome] = useState('');
   const [dataRealizacao, setDataRealizacao] = useState('');
   const [dataReforco, setDataReforco] = useState('');
-  const [isOther, setIsOther] = useState(false);  // Estado para controlar se é "Outro"
+  const [isOther, setIsOther] = useState(false);
 
   const handleSave = () => {
     const formData = {
@@ -26,10 +26,10 @@ export default function PIDModal({ visible, onClose, onSave }) {
 
   const handleSelectorChange = (value) => {
     if (value === 'Outro') {
-      setIsOther(true);  // Se a opção for "Outro", habilita o campo de texto
-      setProcedimento('');  // Limpa o valor do campo de procedimento
+      setIsOther(true);
+      setProcedimento(''); 
     } else {
-      setIsOther(false);  // Se não for "Outro", usa a seleção
+      setIsOther(false);
       setProcedimento(value);
     }
   };
@@ -110,6 +110,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.colors.background,
     borderRadius: 8,
     paddingVertical: 20,
+    paddingHorizontal: 20,
     width: '80%',
     maxHeight: '80%',
   },

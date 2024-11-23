@@ -6,7 +6,7 @@ import { getPetData } from '../Services/PetService';
 import colors from '../styles/colors';
 import PIDFooterBar from '../components/PIDFooterBar';
 import PIDModal from '../components/PIDModal';
-import { registerVacina, getVacinaData } from '../Services/VacinaService';  // Incluindo a função getVacinaData
+import { registerVacina, getVacinaData } from '../Services/VacinaService';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import PIDVaccinationItem from '../components/PIDVaccinationItem'; 
 import { globalStyles } from '../styles/globalStyles';
@@ -20,11 +20,10 @@ export default function VaccinationCard() {
   const [isModalVisible, setModalVisible] = useState(false);
   const [vacinas, setVacinas] = useState([]);
   
-  // Função para buscar as vacinas do pet
   const fetchVacinas = async () => {
     const { success, data, message } = await getVacinaData(petId);
     if (success) {
-      setVacinas(data);  // Armazenar as vacinas retornadas
+      setVacinas(data); 
     } else {
       console.error('Erro ao carregar vacinas:', message);
     }
@@ -42,11 +41,10 @@ export default function VaccinationCard() {
     };
 
     fetchPetData();
-    fetchVacinas();  // Carregar as vacinas quando o componente é montado
+    fetchVacinas();
 
-    // Intervalo de polling para verificar atualizações nas vacinas a cada 5 segundos
     const intervalo = setInterval(fetchVacinas, 5000);
-    return () => clearInterval(intervalo); // Limpa o intervalo quando o componente for desmontado
+    return () => clearInterval(intervalo);
   }, [petId]);
 
   const calculateAge = (birthDate) => {
@@ -156,8 +154,6 @@ export default function VaccinationCard() {
           </Text>
         </View>
       </TouchableOpacity>
-
-      {/* Lista rolável de vacinas */}
 
         {vacinas.length > 0 ? (
           vacinas.map((vacina, index) => (

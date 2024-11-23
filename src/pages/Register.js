@@ -91,14 +91,15 @@ export default function Register() {
           source={require('../assets/img/LogoTitulo.png')}
           style={globalStyles.image} 
         />
-
-        <PIDTextInput placeholder='Nome' value={nome} onChangeText={setNome} />
-        <PIDTextInput placeholder='E-mail' value={email} onChangeText={setEmail} />
-        <PIDTextInput placeholder='CPF' value={cpf} onChangeText={setCpf} />
-        <PIDTextInput placeholder='Telefone' value={telefone} onChangeText={setTelefone} />
-        <PIDTextInput placeholder='Endereço' value={endereco} onChangeText={setEndereco} />
-        <PIDTextInput placeholder='Senha' value={senha} secureTextEntry onChangeText={setSenha} isPassword={true}/>
-        <PIDTextInput placeholder='Confirme sua senha' value={confirmarSenha} secureTextEntry onChangeText={setConfirmarSenha} isPassword={true}/>
+        <View style={{ width: '100%', paddingHorizontal: 64}}>
+          <PIDTextInput placeholder='Nome' value={nome} onChangeText={setNome} />
+          <PIDTextInput placeholder='E-mail' value={email} onChangeText={setEmail} />
+          <PIDTextInput placeholder='CPF' value={cpf} onChangeText={setCpf} />
+          <PIDTextInput placeholder='Telefone' value={telefone} onChangeText={setTelefone} />
+          <PIDTextInput placeholder='Endereço' value={endereco} onChangeText={setEndereco} />
+          <PIDTextInput placeholder='Senha' value={senha} secureTextEntry onChangeText={setSenha} isPassword={true}/>
+          <PIDTextInput placeholder='Confirme sua senha' value={confirmarSenha} secureTextEntry onChangeText={setConfirmarSenha} isPassword={true}/>
+        </View>
 
         <View style={globalStyles.containerLeft}>
           <PIDCheckMarker 

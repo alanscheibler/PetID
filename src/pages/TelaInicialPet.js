@@ -9,6 +9,7 @@ import { getPetsByUser } from '../Services/PetService';
 import { globalStyles } from '../styles/globalStyles';
 
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import colors from '../styles/colors';
 
 export default function TelaInicialPet() {
   const navigation = useNavigation();
@@ -36,9 +37,6 @@ export default function TelaInicialPet() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleProfilePress = () => {
-    navigation.navigate('User');
-  };
   const onRightPress = () => {
     navigation.navigate('RegisterPet');
   };
@@ -50,8 +48,8 @@ export default function TelaInicialPet() {
   };
 
   return (
-    <View style={globalStyles.container}>
-      <PIDHeader onProfilePress={handleProfilePress} />
+    <View style={styles.container}>
+      <PIDHeader/>
       <ScrollView 
         contentContainerStyle={styles.scrollContent} 
         style={styles.scrollView}>
@@ -84,6 +82,12 @@ export default function TelaInicialPet() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.colors.background,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+},
   scrollView: {
     width: '100%',
     flex: 1,

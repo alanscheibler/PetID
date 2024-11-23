@@ -7,6 +7,7 @@ const globalStyles = StyleSheet.create({
         backgroundColor: colors.colors.background,
         alignItems: 'center',
         justifyContent: 'flex-start',
+        paddingHorizontal: 64,
     },
     
     rowContainer: {
@@ -14,7 +15,6 @@ const globalStyles = StyleSheet.create({
         alignItems: 'center',
         justifyContent:'space-between',
         width: '100%',
-        paddingHorizontal: 64,
         paddingBottom: 16,
     },
     containerLeft: {

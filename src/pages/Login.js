@@ -38,7 +38,7 @@ return (
           <PIDButton title="Entrar" onPress={handleLogin} />
         </View>
 
-      <View style={[globalStyles.container, { paddingTop: '50%' }]}>
+      <View style={ { paddingTop: '50%' }}>
         <PIDTextLink title="Crie sua conta" underlined={true} onPress={() => navigation.navigate('Register')} />
       </View>
     </View>
