@@ -11,7 +11,6 @@ import PIDButton from '../components/PIDButton';
 import PIDCheckMarker from '../components/PIDCheckMarker';
 import PIDTextLink from '../components/PIDTextLink';
 
-
 export default function Register() {
   const navigation = useNavigation();
 
@@ -22,6 +21,8 @@ export default function Register() {
   const [endereco, setEndereco] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
+  const [aceitaTermos, setAceitaTermos] = useState(false);
+  const [receberNotificacoes, setReceberNotificacoes] = useState(false);
 
   const handleCancel = () => navigation.navigate('Login');
 
@@ -46,6 +47,11 @@ export default function Register() {
       return false;
     }
 
+    if (!aceitaTermos) {
+      Alert.alert("Erro", "Você deve aceitar os termos de uso para continuar.");
+      return false;
+    }
+
     return true;
   };
 
@@ -54,7 +60,17 @@ export default function Register() {
       return;
     }
 
-    const userData = { nome, email, cpf, telefone, endereco, senha };
+    const userData = { 
+      nome, 
+      email, 
+      cpf, 
+      telefone, 
+      endereco, 
+      senha, 
+      receberNotificacoes,
+      aceitaTermos,
+    };
+    
     const result = await registerUser(userData);
     
     if (result.success) {
@@ -85,9 +101,17 @@ export default function Register() {
         <PIDTextInput placeholder='Confirme sua senha' value={confirmarSenha} secureTextEntry onChangeText={setConfirmarSenha} isPassword={true}/>
 
         <View style={globalStyles.containerLeft}>
-          <PIDCheckMarker title='Desejo receber as notificações' />
-          <PIDCheckMarker title='Concordo com os'> 
-            <PIDTextLink title='termos de uso' underlined onPress={() => navigation.navigate('TermsOfUse')}/>
+          <PIDCheckMarker 
+            title='Desejo receber as notificações' 
+            checked={receberNotificacoes} 
+            onCheckChange={() => setReceberNotificacoes(!receberNotificacoes)} 
+          />
+          <PIDCheckMarker 
+            title='Concordo com os' 
+            checked={aceitaTermos} 
+            onCheckChange={() => setAceitaTermos(!aceitaTermos)} 
+          > 
+            <PIDTextLink title='termos de uso' underlined onCheckChange={() => navigation.navigate('TermsOfUse')}/>
           </PIDCheckMarker>
         </View>
 
