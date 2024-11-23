@@ -5,9 +5,11 @@ import PIDHeader from '../components/PIDHeader';
 import { getPetData } from '../Services/PetService';
 import colors from '../styles/colors';
 import PIDFooterBar from '../components/PIDFooterBar';
-import PIDModal from '../components/PIDModal';  // Importe o modal
-import { globalStyles } from '../styles/globalStyles';
+import PIDModal from '../components/PIDModal';
+import { registerVacina } from '../Services/VacinaService'; // Importando a função de registro de vacina
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+
+import { globalStyles } from '../styles/globalStyles';
 
 export default function VaccinationCard() {
   const navigation = useNavigation();
@@ -15,18 +17,16 @@ export default function VaccinationCard() {
   const { petId } = route.params;
   const [petData, setPetData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isModalVisible, setModalVisible] = useState(false); // Controla a visibilidade do modal
+  const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchPetData = async () => {
       const { success, data, message } = await getPetData(petId);
-
       if (success) {
         setPetData(data);
       } else {
-        console.error("Erro ao buscar dados do pet:", message);
+        console.error('Erro ao buscar dados do pet:', message);
       }
-
       setLoading(false);
     };
 
@@ -34,11 +34,11 @@ export default function VaccinationCard() {
   }, [petId]);
 
   const calculateAge = (birthDate) => {
-    if (!birthDate) return "Desconhecida";
+    if (!birthDate) return 'Desconhecida';
     const today = new Date();
     const birth = new Date(birthDate);
     const ageInYears = today.getFullYear() - birth.getFullYear();
-    return ageInYears > 0 ? `${ageInYears} ano(s)` : "Menos de 1 ano";
+    return ageInYears > 0 ? `${ageInYears} ano(s)` : 'Menos de 1 ano';
   };
 
   const backButtonPress = () => {
@@ -54,11 +54,40 @@ export default function VaccinationCard() {
   };
 
   const onRightPress = () => {
-    setModalVisible(true); // Exibe o modal quando o botão direito for pressionado
+    setModalVisible(true);
   };
 
   const handleModalClose = () => {
-    setModalVisible(false); // Fecha o modal
+    setModalVisible(false);
+  };
+
+  const onSave = async (data) => {
+    // Converte as datas para o formato ISO (YYYY-MM-DD)
+    const formatDate = (date) => {
+      if (!date) return null;
+      const [day, month, year] = date.split('/');
+      return `${year}-${month}-${day}`;
+    };
+  
+    const preparedData = {
+      procedimento: data.procedimento || null,
+      nome_proc: data.nome || null,
+      data_realizacao: formatDate(data.dataRealizacao),
+      data_renovacao: formatDate(data.dataReforco),
+      id_pet: petId,
+    };
+  
+    console.log('Dados sendo enviados para o banco:', preparedData);
+  
+    const { success, vacina, error } = await registerVacina(preparedData);
+  
+    if (success) {
+      console.log('Vacina registrada com sucesso:', vacina);
+    } else {
+      console.error('Erro ao registrar vacina:', error);
+    }
+  
+    setModalVisible(false);
   };
 
   if (loading) {
@@ -92,24 +121,28 @@ export default function VaccinationCard() {
 
         <View style={styles.infoRow}>
           <Text style={styles.infoText}>
-            <Text style={styles.label}>Nome: </Text>{petData.nome || "Desconhecido"}
+            <Text style={styles.label}>Nome: </Text>
+            {petData.nome || 'Desconhecido'}
           </Text>
           <Text style={styles.infoText}>
-            <Text style={styles.label}>Espécie: </Text>{petData.especie || "Desconhecida"}
+            <Text style={styles.label}>Espécie: </Text>
+            {petData.especie || 'Desconhecida'}
           </Text>
         </View>
 
         <View style={styles.infoRow}>
           <Text style={styles.infoText}>
-            <Text style={styles.label}>Idade: </Text>{calculateAge(petData.dataNascimento)}
+            <Text style={styles.label}>Idade: </Text>
+            {calculateAge(petData.dataNascimento)}
           </Text>
           <Text style={styles.infoText}>
-            <Text style={styles.label}>Sexo: </Text>{petData.sexo || "Desconhecido"}
+            <Text style={styles.label}>Sexo: </Text>
+            {petData.sexo || 'Desconhecido'}
           </Text>
         </View>
       </TouchableOpacity>
 
-      <PIDModal visible={isModalVisible} onClose={handleModalClose} onSave={(data) => console.log(data)} />
+      <PIDModal visible={isModalVisible} onClose={handleModalClose} onSave={onSave} />
 
       <View style={styles.footerContainer}>
         <PIDFooterBar
@@ -128,7 +161,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.colors.background,
     flex: 1,
     paddingTop: 0,
-    justifyContent: 'flex-start',  
+    justifyContent: 'flex-start',
   },
   petCardContainer: {
     backgroundColor: colors.colors.componentBG,
@@ -137,13 +170,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#ccc',
-    alignSelf: 'center',  
+    alignSelf: 'center',
   },
   petImageContainer: {
     width: '100%',
     height: 200,
     borderRadius: 8,
-    overflow: 'hidden', 
+    overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -153,7 +186,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   noPhotoBackground: {
-    backgroundColor: '#ccc', 
+    backgroundColor: '#ccc',
   },
   noPhotoText: {
     color: '#fff',
@@ -161,7 +194,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   infoRow: {
-    flexDirection: 'row', 
+    flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
     paddingHorizontal: 16,
@@ -170,18 +203,18 @@ const styles = StyleSheet.create({
   infoText: {
     color: colors.colors.green,
     fontSize: 18,
-    width: '45%',  
+    width: '45%',
   },
   label: {
     color: colors.colors.text,
     fontWeight: 'bold',
   },
   footerContainer: {
-    flexDirection: 'row',          
-    justifyContent: 'center',     
-    alignItems: 'center',        
-    width: '100%',                
-    position: 'absolute',        
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    position: 'absolute',
     bottom: 0,
-  }
+  },
 });
