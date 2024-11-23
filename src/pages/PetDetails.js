@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, TouchableWithoutFeedback, View, Keyboard, Image, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { getPetData, updatePetData, uploadPhoto } from '../Services/PetService'; 
+import { getPetData, updatePetData, uploadPhoto, deletePetData } from '../Services/PetService'; 
 import PIDChangeInput from '../components/PIDChangeInput';
 import PIDButton from '../components/PIDButton';
 import PIDCheckMarker from '../components/PIDCheckMarker';
-import PIDSelector from '../components/PIDSelector'; // Importe o PIDSelector
+import PIDSelector from '../components/PIDSelector';
 import * as ImagePicker from 'expo-image-picker'; 
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
@@ -33,7 +33,7 @@ export default function PetDetails({ route }) {
         setEspecie(result.data.especie);
         setRaca(result.data.raca);
         setDataNascimento(result.data.dataNascimento);
-        setSexo(result.data.sexo);  // Configura o sexo já registrado no banco
+        setSexo(result.data.sexo); 
         setPetCastrado(result.data.petCastrado);
         setFotoPerfil(result.data.fotoPerfil);
       } else {
@@ -104,6 +104,42 @@ export default function PetDetails({ route }) {
     { value: 'macho', label: 'Macho' },
   ];
 
+  const confirmDeletePet = () => {
+    Alert.alert(
+      'Confirmar Exclusão',
+      'Tem certeza de que deseja excluir este pet?',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Excluir',
+          onPress: deletePet,
+          style: 'destructive',
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+  
+  const deletePet = async () => {
+    const { data, error } = await deletePetData(petId);
+  
+    if (error) {
+      Alert.alert('Erro', 'Ocorreu um erro ao deletar o pet: ' + (error.message || 'Tente novamente.'));
+      return;
+    }
+  
+    Alert.alert('Pet deletado com sucesso!');
+    
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'TelaInicialPet' }],
+    });
+  };
+  
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
@@ -114,7 +150,6 @@ export default function PetDetails({ route }) {
             ) : (
               <FontAwesome5 name="dog" style={styles.icon} />
             )}
-
 
             <PIDChangeInput 
               placeholder={'Nome do Pet'} 
@@ -172,6 +207,15 @@ export default function PetDetails({ route }) {
                 onPress={salvarDados} 
               />
             </View>  
+
+            <View style={styles.buttonContainer}>
+              <PIDButton 
+                title='Deletar Pet' 
+                onPress={confirmDeletePet} 
+                outline={true} 
+                style={styles.deleteButton}
+              />
+            </View>
           </>
         )}
       </View>
@@ -211,5 +255,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  deleteButton: {
+    backgroundColor: 'red',
+    color: 'white',
   },
 });
