@@ -22,7 +22,7 @@ export default function RegisterPet() {
   const [nome, setNome] = useState('');
   const [especie, setEspecie] = useState('');
   const [raca, setRaca] = useState('');
-  const [dataNascimento, setDataNascimento] = useState('12/12/2012');
+  const [dataNascimento, setDataNascimento] = useState('');
   const [sexo, setSexo] = useState('');
   const [petCastrado, setPetCastrado] = useState(false);
   const [fotoPerfil, setFotoPerfil] = useState(null);
@@ -100,7 +100,7 @@ export default function RegisterPet() {
 
           <View style={globalStyles.rowContainer}>
             <PIDCheckMarker 
-              title='Pet castrado' 
+              title="Pet castrado" 
               checked={petCastrado} 
               onCheckChange={() => setPetCastrado(!petCastrado)} 
             />

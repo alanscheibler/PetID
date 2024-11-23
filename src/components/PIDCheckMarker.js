@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, TouchableOpacity, Text, View, Image } from 'react-native';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 import marked from '../assets/icon/marked.png';
 import unmarked from '../assets/icon/unmarked.png';
 
-export default function PIDCheckMarker({ title, children }) {
-  const [checked, setChecked] = useState(false);
-
+export default function PIDCheckMarker({ title, checked, onCheckChange, children }) {
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.checkContainer} onPress={() => setChecked(!checked)}>
+      <TouchableOpacity style={styles.checkContainer} onPress={onCheckChange}>
         <Image
           source={checked ? marked : unmarked}
           style={styles.icon}
@@ -26,9 +24,9 @@ export default function PIDCheckMarker({ title, children }) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    alignItems: 'center', 
-    justifyContent: 'flex-start', 
-    paddingVertical: 16, 
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    paddingVertical: 16,
   },
   checkContainer: {
     flexDirection: 'row',
