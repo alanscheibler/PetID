@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    paddingVertical: 16,
+    paddingBottom: 16,
   },
   checkContainer: {
     flexDirection: 'row',
