@@ -1,22 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Image, TouchableOpacity, StyleSheet, Modal, SafeAreaView, Text, TouchableWithoutFeedback, Switch } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '../context/AuthContext';
+import { getUserData, logoutUser } from '../Services/userService';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
-import { useNavigation } from '@react-navigation/native';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import { useAuth } from '../context/AuthContext';
-import { logoutUser } from '../Services/userService';
 
-export default function PIDHeader({showBackButton = false, backButtonPress }) {
+export default function PIDHeader({ showBackButton = false, backButtonPress }) {
   const navigation = useNavigation();
+  const { user, setUser } = useAuth();
+  const [fotoPerfil, setFotoPerfil] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [visible, setVisible] = useState(false);
-  const { setUser } = useAuth();
 
-  const handleLogout = async () => {  
-    await logoutUser();  
-    setUser(null);  
-    navigation.navigation('Login');
+  useEffect(() => {
+    const loadUserProfile = async () => {
+      if (user?.id_usuario) {
+        const result = await getUserData(user.id_usuario);
+        if (result.success) {
+          setFotoPerfil(result.data.fotoPerfil);
+        } else {
+          console.error('Erro ao carregar dados do usuário:', result.message);
+        }
+      }
+    };
+
+    loadUserProfile();
+  }, [user]);
+
+  const handleLogout = async () => {
+    await logoutUser();
+    setUser(null);
+    navigation.navigate('Login');
   };
 
   const options = [
@@ -25,17 +41,16 @@ export default function PIDHeader({showBackButton = false, backButtonPress }) {
       action: () => {
         setVisible(false);
         navigation.navigate('User');
-      }, 
+      },
     },
     {
       title: 'Alterar tema',
-      custom: true, 
+      custom: true,
     },
     {
       title: 'Sair',
       action: () => {
         setVisible(false);
-        console.log('logout');
         handleLogout();
       },
     },
@@ -44,48 +59,43 @@ export default function PIDHeader({showBackButton = false, backButtonPress }) {
   return (
     <View style={styles.barraSuperior}>
       {showBackButton && (
-        <TouchableOpacity
-        style={styles.backButton}
-        onPress={backButtonPress}>
-        <FontAwesome5 name="angle-double-left" style={styles.icon}/>
+        <TouchableOpacity style={styles.backButton} onPress={backButtonPress}>
+          <FontAwesome5 name="angle-double-left" style={styles.icon} />
         </TouchableOpacity>
-        
       )}
-      <Image 
-        source={require('../assets/img/Logo.png')} 
-        style={styles.iconePata}
-      />
-      <TouchableOpacity 
-        style={styles.botaoPerfil} 
-        onPress={() => setVisible(true)} 
-      >
-      <FontAwesome5 name="user-alt" style={styles.icon}/>
+      <Image source={require('../assets/img/Logo.png')} style={styles.iconePata} />
+      <TouchableOpacity style={styles.botaoPerfil} onPress={() => setVisible(true)}>
+        {fotoPerfil ? (
+          <Image source={{ uri: fotoPerfil }} style={styles.fotoPerfil} />
+        ) : (
+          <FontAwesome5 name="user-alt" style={styles.icon} />
+        )}
       </TouchableOpacity>
 
-      {/* Modal para opções */}
       <Modal transparent visible={visible} animationType="fade">
         <TouchableWithoutFeedback onPress={() => setVisible(false)}>
           <View style={styles.modalBackground}>
             <SafeAreaView style={styles.popup}>
               {options.map((op, i) => (
-                <TouchableOpacity
-                  style={styles.option}
-                  key={i}
-                  onPress={op.custom ? null : op.action} 
-                  activeOpacity={op.custom ? 1 : 0.7}
-                >
-                  <Text style={styles.optionText}>{op.title}</Text>
-                  {op.custom && (
-                    <Switch
-                      value={isDarkMode}
-                      onValueChange={(value) => {
-                        setIsDarkMode(value); 
-                      }}
-                      thumbColor={isDarkMode ? colors.colors.green : '#f4f3f4'}
-                      trackColor={{ false: '#767577', true: '#81b0ff' }}
-                    />
-                  )}
-                </TouchableOpacity>
+                <View key={i}>
+                  <TouchableOpacity
+                    style={styles.option}
+                    onPress={op.custom ? null : op.action}
+                    activeOpacity={op.custom ? 1 : 0.7}
+                  >
+                    <Text style={styles.optionText}>{op.title}</Text>
+                    {op.custom && (
+                      <Switch
+                        value={isDarkMode}
+                        onValueChange={(value) => setIsDarkMode(value)}
+                        thumbColor={isDarkMode ? colors.colors.green : '#f4f3f4'}
+                        trackColor={{ false: '#767577', true: '#81b0ff' }}
+                      />
+                    )}
+                  </TouchableOpacity>
+                  {/* Adicionando a linha divisória, exceto no último item */}
+                  {i < options.length - 1 && <View style={styles.separator} />}
+                </View>
               ))}
             </SafeAreaView>
           </View>
@@ -98,30 +108,34 @@ export default function PIDHeader({showBackButton = false, backButtonPress }) {
 const styles = StyleSheet.create({
   barraSuperior: {
     width: '100%',
-    height: 90, 
+    height: 90,
     paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center', 
-    backgroundColor: colors.colors.componentBG, 
-    elevation: 2, 
+    justifyContent: 'center',
+    backgroundColor: colors.colors.componentBG,
+    elevation: 2,
   },
   iconePata: {
     width: 50,
     height: 50,
-    position: 'center',       
+    position: 'center',
     top: 15,
   },
   botaoPerfil: {
-    position: 'absolute',   
-    right: 10,              
+    position: 'absolute',
+    right: 10,
     padding: 10,
     top: 30,
   },
+  fotoPerfil: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
   icon: {
-    paddingTop: 5,
     fontSize: 24,
-    color: colors.colors.green
+    color: colors.colors.green,
   },
   modalBackground: {
     flex: 1,
@@ -156,8 +170,10 @@ const styles = StyleSheet.create({
     padding: 10,
     top: 30,
   },
-  icon:{
-    fontSize: 24,
-    color: colors.colors.green
-  }  
+  separator: {
+    height: 1,
+    backgroundColor: colors.colors.text,
+    opacity: 0.1,
+    marginHorizontal: 8,
+  },
 });
