@@ -3,19 +3,18 @@ import { StyleSheet, TouchableWithoutFeedback, ScrollView, View, Keyboard, Image
 import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import * as ImagePicker from 'expo-image-picker';
-import { globalStyles } from '../styles/globalStyles';
 
 import { registerPet } from '../Services/PetService';
 import { useAuth } from '../context/AuthContext'; 
+import { useTheme } from '../context/ThemeContext';
 
 import PIDTextInput from '../components/PIDTextInput';
 import PIDButton from '../components/PIDButton';
 import PIDCheckMarker from '../components/PIDCheckMarker';
 import PIDSelector from '../components/PIDSelector';
 
-import colors from '../styles/colors';
-
 export default function RegisterPet() {
+  const { colors, theme } = useTheme();
   const { user } = useAuth(); 
   const navigation = useNavigation();
   
@@ -74,14 +73,16 @@ export default function RegisterPet() {
   };
   
   return (
-    <ScrollView style={styles.scrollContainer}>
+    <ScrollView style={styles.scrollContainer(colors)}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={globalStyles.container}>
-          <StatusBar style="auto" />
-          
+        <View style={styles.container(colors)}>
+          <StatusBar 
+            style={theme === 'light' ? 'dark' : 'light'}
+            backgroundColor={colors.background} 
+          />
           <Image 
             source={require('../assets/img/LogoTitulo.png')}
-            style={globalStyles.image} 
+            style={styles.image} 
           />
 
           <PIDTextInput placeholder='Nome' value={nome} onChangeText={setNome} />
@@ -98,7 +99,7 @@ export default function RegisterPet() {
             placeholder={{ label: 'Selecione o Sexo', value: null }}
           />
 
-          <View style={globalStyles.rowContainer}>
+          <View style={styles.rowContainer}>
             <PIDCheckMarker 
               title="Pet castrado" 
               checked={petCastrado} 
@@ -106,7 +107,7 @@ export default function RegisterPet() {
             />
           </View>
 
-          <View style={globalStyles.rowContainer}>
+          <View style={styles.rowContainer}>
             <PIDButton 
               title='Alterar Foto' 
               outline={true} 
@@ -115,7 +116,7 @@ export default function RegisterPet() {
             />
           </View> 
           
-          <View style={globalStyles.rowContainer}>
+          <View style={styles.rowContainer}>
             <PIDButton title='Cancelar' outline={true} onPress={handleCancel} />
             <PIDButton title='Registrar' onPress={handleRegister} />
           </View>
@@ -126,9 +127,29 @@ export default function RegisterPet() {
 };
 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    backgroundColor: colors.colors.background,
+  scrollContainer: (colors)=> ({
+    backgroundColor: colors.background,
     paddingTop: 40,
+}),
+container: (colors)=> ({
+  flex: 1,
+  backgroundColor: colors.background,
+  alignItems: 'center',
+  justifyContent: 'flex-start',
+  paddingHorizontal: 64,
+}),    
+rowContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent:'space-between',
+  width: '100%',
+  paddingBottom: 16,
+},
+image: {
+  width: 100,
+  height: 100,
+  resizeMode: 'contain',
+  margin: 10,
 },
 
 })
