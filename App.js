@@ -6,6 +6,7 @@ import * as Font from 'expo-font';
 
 import AppRoutes from './src/routes/AppRoutes';
 import { AuthProvider } from './src/context/AuthContext';
+import { ThemeProvider } from './src/context/ThemeContext';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -39,8 +40,11 @@ export default function App() {
   }
 
   return (
-    <AuthProvider>
-      <AppRoutes/>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <AppRoutes/>
+      </AuthProvider>
+    </ThemeProvider>
+    
   );
 };

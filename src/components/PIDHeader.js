@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { View, Image, TouchableOpacity, StyleSheet, Modal, SafeAreaView, Text, TouchableWithoutFeedback, Switch } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useAuth } from '../context/AuthContext';
-import { getUserData, logoutUser } from '../Services/userService';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
+import { useNavigation } from '@react-navigation/native';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import { useAuth } from '../context/AuthContext';
+import { logoutUser } from '../Services/userService';
+import { useTheme } from '../context/ThemeContext';
 
 export default function PIDHeader({ showBackButton = false, backButtonPress }) {
   const navigation = useNavigation();
   const { user, setUser } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [fotoPerfil, setFotoPerfil] = useState(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -86,14 +87,13 @@ export default function PIDHeader({ showBackButton = false, backButtonPress }) {
                     <Text style={styles.optionText}>{op.title}</Text>
                     {op.custom && (
                       <Switch
-                        value={isDarkMode}
-                        onValueChange={(value) => setIsDarkMode(value)}
-                        thumbColor={isDarkMode ? colors.colors.green : '#f4f3f4'}
+                        value={theme === 'dark'}
+                        onValueChange={toggleTheme}
+                        thumbColor={theme === 'dark' ? colors.colors.green : '#f4f3f4'}
                         trackColor={{ false: '#767577', true: '#81b0ff' }}
                       />
                     )}
                   </TouchableOpacity>
-                  {/* Adicionando a linha divisória, exceto no último item */}
                   {i < options.length - 1 && <View style={styles.separator} />}
                 </View>
               ))}
