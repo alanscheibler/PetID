@@ -167,6 +167,7 @@ export default function PetDetails({ route }) {
               onChangeText={setRaca}
             />
             <PIDChangeInput 
+              isDate
               placeholder={'Data de Nascimento'} 
               value={dataNascimento} 
               onChangeText={setDataNascimento}

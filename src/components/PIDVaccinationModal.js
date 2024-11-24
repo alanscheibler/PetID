@@ -96,11 +96,13 @@ export default function PIDVaccinationModal({ vacina, visible, onClose, onSave }
               placeholder="Nome do Procedimento"
             />
             <PIDChangeInput
+              isDate
               value={dataRealizacao}
               onChangeText={setDataRealizacao}
               placeholder="Data de Realização"
             />
             <PIDChangeInput
+              isDate
               value={dataRenovacao}
               onChangeText={setDataRenovacao}
               placeholder="Data de Renovação"
