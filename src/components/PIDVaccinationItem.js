@@ -1,87 +1,61 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { getVacinaData } from '../Services/VacinaService';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import colors from '../styles/colors';
+import PIDVaccinationModal from './PIDVaccinationModal';
 
-export default function PIDVaccinationItem({ petId }) {
-  const [vacinas, setVacinas] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+export default function PIDVaccinationItem({ vacina, onRefresh }) {
+  const [modalVisible, setModalVisible] = useState(false);
 
-  const fetchVacinas = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+  const openEditModal = () => {
+    setModalVisible(true);
+  };
 
-    const { success, data, message } = await getVacinaData(petId);
-    if (success) {
-      setVacinas(data);
-    } else {
-      setError(message);
-    }
+  const closeModal = () => {
+    setModalVisible(false);
+  };
 
-    setLoading(false);
-  }, [petId]);
-
-  useEffect(() => {
-    fetchVacinas();
-  }, [petId, fetchVacinas]);
-
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={colors.colors.primary} />
-        <Text>Carregando vacinas...</Text>
-      </View>
-    );
-  }
-
-  if (error) {
-    return <Text>Erro ao carregar vacinas: {error}</Text>;
-  }
-
-  // Renderizando uma vacina por vez
   return (
-    <View style={styles.container}>
-      {vacinas.length > 0 ? (
-        <View style={styles.itemContainer}>
+    <View style={styles.itemContainer}>
+      <View style={styles.infoContainer}>
+        <View style={styles.textContainer}>
           <Text style={styles.itemText}>
             <Text style={styles.label}>Procedimento: </Text>
-            {vacinas[0].procedimento}
+            {vacina.procedimento}
           </Text>
           <Text style={styles.itemText}>
             <Text style={styles.label}>Nome: </Text>
-            {vacinas[0].nome_proc}
+            {vacina.nome_proc}
           </Text>
           <Text style={styles.itemText}>
             <Text style={styles.label}>Data de Realização: </Text>
-            {vacinas[0].data_realizacao}
+            {vacina.data_realizacao}
           </Text>
-          {vacinas[0].data_renovacao && (
+          {vacina.data_renovacao && (
             <Text style={styles.itemText}>
               <Text style={styles.label}>Data de Renovação: </Text>
-              {vacinas[0].data_renovacao}
+              {vacina.data_renovacao}
             </Text>
           )}
         </View>
-      ) : (
-        <Text>Sem vacinas registradas.</Text>
+        <TouchableOpacity onPress={openEditModal} style={styles.iconButton}>
+          <Ionicons name="pencil" style={styles.icon}/>
+        </TouchableOpacity>
+      </View>
+
+      {modalVisible && (
+        <PIDVaccinationModal
+          vacina={vacina}
+          visible={modalVisible}
+          onClose={closeModal}
+          onSave={onRefresh}
+        />
       )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 4,
-    alignItems: 'center',
-    
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   itemContainer: {
     width: '90%',
     padding: 10,
@@ -90,6 +64,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#ccc',
+    alignSelf: 'center',
+  },
+  infoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  textContainer: {
+    flex: 1,
   },
   itemText: {
     fontSize: 16,
@@ -97,5 +80,15 @@ const styles = StyleSheet.create({
   },
   label: {
     fontWeight: 'bold',
+  },
+  icon: {
+    fontSize: 24,
+    color: colors.colors.green
+  },  
+  iconButton: {
+    padding: 5,
+    marginLeft: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
