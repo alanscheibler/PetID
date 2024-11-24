@@ -1,30 +1,59 @@
-import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, TextInput } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
-import { TextInput } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 
-export default function PIDChangeInput({ icon = 'pencil', isDate, value, onChangeText, ...rest }) {
+export default function PIDChangeInput({ icon = 'pencil', isDate = false, value, onChangeText, ...rest }) {
     const [isFocused, setIsFocused] = useState(false);
-
+    const [tempValue, setTempValue] = useState(value);
     const formatToDisplay = (date) => {
-        if (!date) return '';
+        if (!date) return ''; 
         const [year, month, day] = date.split('-');
         return `${day}/${month}/${year}`;
     };
 
     const formatToStorage = (date) => {
-        if (!date) return '';
-        const [day, month, year] = date.split('/');
+        if (!date) return ''; 
+        const [day, month, year] = date.split('/'); 
         return `${year}-${month}-${day}`;
     };
 
+
     const handleDateChange = (formattedDate) => {
-        const storageFormat = formatToStorage(formattedDate);
-        onChangeText(storageFormat);
+
+        const cleanDate = formattedDate.replace(/\D/g, '');
+        if (cleanDate.length === 0) {
+            setTempValue(''); 
+        } else {
+            setTempValue(formattedDate);
+        }
     };
+
+    const handleBlur = () => {
+        setIsFocused(false);
+
+        if (tempValue !== value) {
+            let formattedValue = tempValue;
+
+            if (isDate) {
+                formattedValue = formatToStorage(tempValue);
+            }
+
+            onChangeText(formattedValue);
+        }
+    };
+
+    const handleFocus = () => {
+        setIsFocused(true);
+    };
+
+    useEffect(() => {
+        if (!isFocused && value) {
+            setTempValue(isDate ? formatToDisplay(value) : value);
+        }
+    }, [value, isFocused, isDate]);
 
     return (
         <View style={styles.container}>
@@ -33,20 +62,20 @@ export default function PIDChangeInput({ icon = 'pencil', isDate, value, onChang
                     type={'custom'}
                     options={{ mask: '99/99/9999' }}
                     style={[styles.input, isFocused && styles.inputFocused]}
-                    onFocus={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
                     keyboardType="numeric"
-                    value={formatToDisplay(value)}
+                    value={tempValue}
                     onChangeText={handleDateChange}
                     {...rest}
                 />
             ) : (
                 <TextInput
                     style={[styles.input, isFocused && styles.inputFocused]}
-                    onFocus={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}
-                    value={value}
-                    onChangeText={onChangeText}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    value={tempValue}
+                    onChangeText={setTempValue}
                     placeholder="Digite algo..."
                     {...rest}
                 />
