@@ -7,11 +7,13 @@ import PIDButton from '../components/PIDButton';
 import PIDCheckMarker from '../components/PIDCheckMarker';
 import PIDSelector from '../components/PIDSelector';
 import * as ImagePicker from 'expo-image-picker'; 
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { useTheme } from '../context/ThemeContext';
+import { StatusBar } from 'expo-status-bar';
 
-import colors from '../styles/colors';
 
 export default function PetDetails({ route }) {
+  const { colors, theme } = useTheme();
   const navigation = useNavigation();
   const { petId } = route.params;
 
@@ -142,13 +144,17 @@ export default function PetDetails({ route }) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
+      <View style={styles.container(colors)}>
+        <StatusBar 
+            style={theme === 'light' ? 'dark' : 'light'}
+            backgroundColor={colors.background} 
+        /> 
         {pet && (
           <>
             {fotoPerfil ? (
               <Image source={{ uri: fotoPerfil }} style={styles.image} />
             ) : (
-              <FontAwesome5 name="dog" style={styles.icon} />
+              <MaterialIcons name="pets" style={styles.icon(colors)} />
             )}
 
             <PIDChangeInput 
@@ -225,13 +231,13 @@ export default function PetDetails({ route }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  container: (colors) => ({
     flex: 1,
     alignItems: 'center',
-    backgroundColor: colors.colors.background,
+    backgroundColor: colors.background,
     paddingVertical: 104,
     paddingHorizontal: 64,
-  },
+  }),
   image: {
     width: 100,
     height: 100,
@@ -239,11 +245,11 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     marginVertical: 20,
   },
-  icon: {
+  icon: (colors) => ({
     fontSize: 70,
-    color: colors.colors.green,
+    color: colors.green,
     paddingBottom: 30,
-  },
+  }),
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -256,9 +262,5 @@ const styles = StyleSheet.create({
     marginTop: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  deleteButton: {
-    backgroundColor: 'red',
-    color: 'white',
   },
 });

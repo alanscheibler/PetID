@@ -69,7 +69,7 @@ export default function TelaInicialPet() {
             />
           ))
         ) : (
-          <Text>Nenhum pet encontrado. Cadastre um pet.</Text>
+          <Text style={styles.noPetsMessage(colors)}>Nenhum pet encontrado. Cadastre um pet.</Text>
         )}
         
       </ScrollView>
@@ -110,4 +110,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
   },
+  noPetsMessage: (colors) => ({
+    textAlign: 'center', 
+    color: colors.green,
+    fontSize: 18,
+    marginTop: 16,
+  })
 });

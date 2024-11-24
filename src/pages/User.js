@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, TouchableWithoutFeedback, View, Keyboard, Image, Alert } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from '@react-navigation/native';
 
 import { getUserData, updateUserData, uploadPhoto } from '../Services/userService'; 
 
-import colors from '../styles/colors';
 import PIDChangeInput from '../components/PIDChangeInput';
 import PIDButton from '../components/PIDButton';
 import * as ImagePicker from 'expo-image-picker'; 
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-
+import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
+
 
 export default function User() {
   const navigation = useNavigation();
-
+  const { colors, theme } = useTheme();
   const {user} = useAuth();
 
   const [usuario, setUsuario] = useState(null);
@@ -109,13 +110,17 @@ export default function User() {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
+      <View style={styles.container(colors)}>
+        <StatusBar 
+          style={theme === 'light' ? 'dark' : 'light'}
+            backgroundColor={colors.background} 
+        />
         {usuario && (
           <>
             {fotoPerfil ? (
               <Image source={{ uri: fotoPerfil }} style={styles.image} />
             ) : (
-              <FontAwesome5 name="user-alt" style={styles.icon} />
+              <FontAwesome5 name="user-alt" style={styles.icon(colors)} />
             )}
 
             <PIDChangeInput 
@@ -175,13 +180,13 @@ export default function User() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  container: (colors) =>({
     flex: 1,
     alignItems: 'center',
-    backgroundColor: colors.colors.background,
+    backgroundColor: colors.background,
     paddingVertical: 104,
     paddingHorizontal: 64,
-  },
+  }),
   image: {
     width: 100,
     height: 100,
@@ -189,11 +194,11 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     marginVertical: 20,
   },
-  icon: {
+  icon: (colors) =>({
     fontSize: 70,
-    color: colors.colors.green,
+    color: colors.green,
     paddingBottom: 30,
-  },
+  }),
   buttonContainer: {
     width: '100%',
 
