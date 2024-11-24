@@ -1,21 +1,22 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Text, View, Image } from 'react-native';
-import colors from '../styles/colors';
 import fonts from '../styles/fonts';
-import marked from '../assets/icon/marked.png';
-import unmarked from '../assets/icon/unmarked.png';
+import { useTheme } from '../context/ThemeContext';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+
 
 export default function PIDCheckMarker({ title, checked, onCheckChange, children }) {
+  const { colors } = useTheme();
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.checkContainer} onPress={onCheckChange}>
-        <Image
-          source={checked ? marked : unmarked}
-          style={styles.icon}
+        <MaterialIcons 
+          name={checked ? "check-box" : "check-box-outline-blank"} 
+          size={24}  
+          color={colors.green}
         />
-        {title && <Text style={styles.title}>{title}</Text>}
+        {title && <Text style={styles.title(colors)}>{title}</Text>}
       </TouchableOpacity>
-
       {children}
     </View>
   );
@@ -32,13 +33,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  title: {
+  title:(colors) => ({
     fontSize: fonts.size.medium,
-    color: colors.colors.green,
+    color: colors.green,
     marginLeft: 8,
-  },
-  icon: {
-    width: 24,
-    height: 24,
-  },
+  }),
 });
