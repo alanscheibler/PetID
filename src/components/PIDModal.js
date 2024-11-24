@@ -53,7 +53,6 @@ export default function PIDModal({ visible, onClose, onSave }) {
           <Text style={styles.title}>Adicionar Procedimento</Text>
 
           <ScrollView style={styles.formContainer}>
-            {/* Usando o PIDSelector para o procedimento */}
             <PIDSelector
               value={procedimento}
               onValueChange={handleSelectorChange}
@@ -61,7 +60,6 @@ export default function PIDModal({ visible, onClose, onSave }) {
               placeholder={{ label: 'Selecione um procedimento', value: '' }}
             />
 
-            {/* Se for a opção "Outro", mostrar o PIDTextInput */}
             {isOther && (
               <PIDTextInput
                 value={procedimento}

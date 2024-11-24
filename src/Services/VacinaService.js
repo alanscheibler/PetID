@@ -33,22 +33,20 @@ export async function registerVacina(vacinaData) {
   }
 }
 
-export async function getVacinaData(id_pet) {
+export const getVacinaData = async (petId) => {
   try {
     const { data, error } = await supabase
       .from('vacina')
       .select('*')
-      .eq('id_pet', id_pet);  // Altere para buscar pelo id_pet, sem o single()
+      .eq('id_pet', petId);
 
-    if (error) {
-      throw new Error(error.message);
-    }
+    if (error) throw error;
 
     return { success: true, data };
   } catch (error) {
     return { success: false, message: error.message };
   }
-}
+};
 
 export async function updateVacinaData(id_vacina, updateData) {
   try {

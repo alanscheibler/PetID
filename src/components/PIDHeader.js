@@ -5,7 +5,7 @@ import fonts from '../styles/fonts';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
-export default function PIDHeader({ onProfilePress, showBackButton = false, backButtonPress }) {
+export default function PIDHeader({showBackButton = false, backButtonPress }) {
   const navigation = useNavigation();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [visible, setVisible] = useState(false);

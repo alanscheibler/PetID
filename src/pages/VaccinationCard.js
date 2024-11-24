@@ -155,10 +155,14 @@ export default function VaccinationCard() {
         </View>
       </TouchableOpacity>
 
-        {vacinas.length > 0 ? (
-          vacinas.map((vacina, index) => (
-            <PIDVaccinationItem key={index} petId={petId} vacina={vacina} />
-          ))
+      {vacinas.length > 0 ? (
+      vacinas.map((vacina) => (
+        <PIDVaccinationItem 
+          key={vacina.id_vacina} 
+          vacina={vacina} 
+          onRefresh={fetchVacinas}
+        />
+      ))
         ) : (
           <Text>Sem vacinas registradas.</Text>
         )}
