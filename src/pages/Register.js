@@ -1,17 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
-import { ScrollView, View, Image, Alert } from 'react-native';
+import { ScrollView, View, Image, Alert, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 
 import { registerUser } from '../Services/userService';
-
-import { globalStyles } from '../styles/globalStyles';
+import { useTheme } from '../context/ThemeContext';
 import PIDTextInput from '../components/PIDTextInput';
 import PIDButton from '../components/PIDButton';
 import PIDCheckMarker from '../components/PIDCheckMarker';
 import PIDTextLink from '../components/PIDTextLink';
 
 export default function Register() {
+  const { colors,  theme } = useTheme();
   const navigation = useNavigation();
 
   const [nome, setNome] = useState('');
@@ -83,13 +83,15 @@ export default function Register() {
   };
 
   return (
-    <ScrollView style={globalStyles.scrollContainer}>
-      <StatusBar style="auto" />
-
+    <ScrollView style={styles.scrollContainer(colors)}>
+      <StatusBar 
+          style={theme === 'light' ? 'dark' : 'light'}
+          backgroundColor={colors.background} 
+      />
       <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 60, paddingBottom: 30 }}>
         <Image 
           source={require('../assets/img/LogoTitulo.png')}
-          style={globalStyles.image} 
+          style={styles.image} 
         />
         <View style={{ width: '100%', paddingHorizontal: 64}}>
           <PIDTextInput placeholder='Nome' value={nome} onChangeText={setNome} />
@@ -100,8 +102,7 @@ export default function Register() {
           <PIDTextInput placeholder='Senha' value={senha} secureTextEntry onChangeText={setSenha} isPassword={true}/>
           <PIDTextInput placeholder='Confirme sua senha' value={confirmarSenha} secureTextEntry onChangeText={setConfirmarSenha} isPassword={true}/>
         </View>
-
-        <View style={globalStyles.containerLeft}>
+        <View style={{alignSelf: 'flex-start', marginLeft: 64 }}>
           <PIDCheckMarker 
             title='Desejo receber as notificações' 
             checked={receberNotificacoes} 
@@ -110,12 +111,10 @@ export default function Register() {
           <PIDCheckMarker 
             title='Concordo com os' 
             checked={aceitaTermos} 
-            onCheckChange={() => setAceitaTermos(!aceitaTermos)} 
-          > 
+            onCheckChange={() => setAceitaTermos(!aceitaTermos)}> 
             <PIDTextLink title='termos de uso' underlined onCheckChange={() => navigation.navigate('TermsOfUse')}/>
           </PIDCheckMarker>
         </View>
-
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '80%', paddingHorizontal: 20 }}>
           <View style={{ flex: 1, marginRight: 10 }}>
             <PIDButton title='Cancelar' outline onPress={handleCancel} />
@@ -124,8 +123,19 @@ export default function Register() {
             <PIDButton title='Criar' onPress={handleRegister} />
           </View>
         </View>
-
       </View>
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  scrollContainer:(colors)=>({
+      backgroundColor: colors.background,
+  }),
+  image: {
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
+    margin: 10,
+},
+});

@@ -2,22 +2,22 @@ import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, TouchableWithoutFeedback, View, Keyboard, Image, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { globalStyles } from '../styles/globalStyles';
+import { useTheme } from '../context/ThemeContext';
 
 import PIDTextInput from '../components/PIDTextInput';
 import PIDButton from '../components/PIDButton';
-import colors from '../styles/colors';
 
 export default function ForgotPassoword() {
+  const { colors } = useTheme();
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={[globalStyles.container, { paddingTop: '50%' }]}>
+      <View style={[styles.container(colors), { paddingTop: '50%' }]}>
         <StatusBar style="auto" />
-        <Image source={require('../assets/img/LogoTitulo.png')} style={globalStyles.image} />
-        <Text style={styles.text}>Enviaremos um email com as instruções de recuperação da sua senha.</Text>
+        <Image source={require('../assets/img/LogoTitulo.png')} style={styles.image} />
+        <Text style={styles.text(colors)}>Enviaremos um email com as instruções de recuperação da sua senha.</Text>
         <PIDTextInput placeholder="E-mail" value={email} onChangeText={setEmail} />
 
         <View style={styles.buttonContainer}>
@@ -30,12 +30,19 @@ export default function ForgotPassoword() {
 }
 
 const styles = StyleSheet.create({
-  text: {
+  container:(colors)=>({
+    flex: 1,
+    backgroundColor:colors.background,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    paddingHorizontal: 64,
+}),
+  text:(colors)=>({
     width: 250,
     fontSize: 16,
     textAlign: 'justify',
-    color: colors.colors.green,
-  },
+    color: colors.green,
+  }),
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -43,4 +50,10 @@ const styles = StyleSheet.create({
     width: '100%', 
     marginTop: 10, 
   },
+  image: {
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
+    margin: 10,
+},
 });
