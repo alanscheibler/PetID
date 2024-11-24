@@ -119,3 +119,16 @@ export async function uploadPhoto (uri, usuario) {
 
   return publicURL; 
 };
+export async function logoutUser() {
+  try {
+    const { error } = await supabase.auth.signOut(); 
+    if (error) {
+      console.error('Erro ao fazer logout:', error.message);
+      return { success: false, message: error.message };
+    }
+    return { success: true, message: 'Logout realizado com sucesso!' };
+  } catch (error) {
+    console.error('Erro no logout:', error.message);
+    return { success: false, message: error.message };
+  }
+}
