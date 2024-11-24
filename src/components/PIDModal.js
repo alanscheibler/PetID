@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { View, Modal, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { useTheme } from '../context/ThemeContext';
 import PIDTextInput from './PIDTextInput';
 import PIDButton from './PIDButton';
 import PIDSelector from './PIDSelector';
-import colors from '../styles/colors';
-import { globalStyles } from '../styles/globalStyles';
 
 export default function PIDModal({ visible, onClose, onSave }) {
+  const { colors, theme } = useTheme();
   const [procedimento, setProcedimento] = useState('');
   const [nome, setNome] = useState('');
   const [dataRealizacao, setDataRealizacao] = useState('');
@@ -49,8 +49,8 @@ export default function PIDModal({ visible, onClose, onSave }) {
       onRequestClose={onClose}
     >
       <View style={styles.overlay}>
-        <View style={styles.modalContainer}>
-          <Text style={styles.title}>Adicionar Procedimento</Text>
+        <View style={styles.modalContainer(colors)}>
+          <Text style={styles.title(colors)}>Adicionar Procedimento</Text>
 
           <ScrollView style={styles.formContainer}>
             <PIDSelector
@@ -59,7 +59,6 @@ export default function PIDModal({ visible, onClose, onSave }) {
               items={options}
               placeholder={{ label: 'Selecione um procedimento', value: '' }}
             />
-
             {isOther && (
               <PIDTextInput
                 value={procedimento}
@@ -67,7 +66,6 @@ export default function PIDModal({ visible, onClose, onSave }) {
                 placeholder="Descreva o procedimento"
               />
             )}
-
             <PIDTextInput
               value={nome}
               onChangeText={setNome}
@@ -87,7 +85,7 @@ export default function PIDModal({ visible, onClose, onSave }) {
             />
           </ScrollView>
 
-          <View style={globalStyles.rowContainer}>
+          <View style={styles.buttonContainer}>
             <PIDButton title="Fechar" outline={true} onPress={onClose} />
             <PIDButton title="Salvar" onPress={handleSave} />
           </View>
@@ -104,46 +102,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  modalContainer: {
-    backgroundColor: colors.colors.background,
+  modalContainer: (colors)=>({
+    backgroundColor: colors.background,
     borderRadius: 8,
     paddingVertical: 20,
     paddingHorizontal: 20,
     width: '80%',
     maxHeight: '80%',
-  },
-  title: {
+  }),
+  title: (colors)=>({
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
-    color: colors.colors.text,
-  },
+    color: colors.text,
+  }),
   formContainer: {
     marginBottom: 20,
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  saveButton: {
-    backgroundColor: colors.colors.green,
-    padding: 10,
-    borderRadius: 8,
-    flex: 1,
-    marginRight: 10,
-    alignItems: 'center',
-  },
-  closeButton: {
-    backgroundColor: colors.colors.red,
-    padding: 10,
-    borderRadius: 8,
-    flex: 1,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });

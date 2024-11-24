@@ -1,6 +1,5 @@
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
-import colors from '../styles/colors'; 
 import fonts from '../styles/fonts';
 import { useTheme } from '../context/ThemeContext';
 
@@ -42,7 +41,7 @@ export default function PIDSelector({
         ]}
         onPress={toggleDropdown}
       >
-        <Text style={[styles.selectorText, !selectedValue && styles.placeholderText]}>
+        <Text style={[styles.selectorText(colors), !selectedValue && styles.placeholderText]}>
           {selectedValue ? items.find(item => item.value === selectedValue)?.label : placeholder.label}
         </Text>
       </TouchableOpacity>
@@ -87,10 +86,10 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.green,
   }),
-  selectorText: {
+  selectorText: (colors)=>({
+    color: colors.text,
     fontSize: fonts.size.medium,
-    color: 'black',
-  },
+  }),
   placeholderText: {
     color: 'gray',
   },
