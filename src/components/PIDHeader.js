@@ -4,11 +4,20 @@ import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import { useAuth } from '../context/AuthContext';
+import { logoutUser } from '../Services/userService';
 
 export default function PIDHeader({ onProfilePress, showBackButton = false, backButtonPress }) {
   const navigation = useNavigation();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [visible, setVisible] = useState(false);
+  const { setUser } = useAuth();
+
+  const handleLogout = async () => {  
+    await logoutUser();  
+    setUser(null);  
+    navigation.navigation('Login');
+  };
 
   const options = [
     {
@@ -27,6 +36,7 @@ export default function PIDHeader({ onProfilePress, showBackButton = false, back
       action: () => {
         setVisible(false);
         console.log('logout');
+        handleLogout();
       },
     },
   ];

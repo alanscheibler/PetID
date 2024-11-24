@@ -18,6 +18,7 @@ export default function Login() {
   const [senha, setSenha] = useState('');
   const [authUser, setAuthUser] = useState(null);
 
+<<<<<<< Updated upstream
   function handleLogin() {
     signInWithEmailAndPassword(auth, email, senha)
     .then((user) => {
@@ -36,6 +37,17 @@ export default function Login() {
       console.log(err.code);
     })
   }
+=======
+  const handleLogin = async () => {
+    const result = await loginUser(email, senha);
+
+    if (result.success) {
+      setUser(result.user);
+    } else {
+      Alert.alert("Erro ao realizar login", result.message);
+    }
+  };
+>>>>>>> Stashed changes
 
   return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
