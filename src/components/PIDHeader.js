@@ -7,8 +7,10 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useAuth } from '../context/AuthContext';
 import { logoutUser } from '../Services/userService';
 import { useTheme } from '../context/ThemeContext';
+import { getUserData } from '../Services/userService'; 
 
 export default function PIDHeader({ showBackButton = false, backButtonPress }) {
+  const { colors } = useTheme();
   const navigation = useNavigation();
   const { user, setUser } = useAuth();
   const { theme, toggleTheme } = useTheme();
@@ -58,10 +60,10 @@ export default function PIDHeader({ showBackButton = false, backButtonPress }) {
   ];
 
   return (
-    <View style={styles.barraSuperior}>
+    <View style={styles.barraSuperior(colors)}>
       {showBackButton && (
         <TouchableOpacity style={styles.backButton} onPress={backButtonPress}>
-          <FontAwesome5 name="angle-double-left" style={styles.icon} />
+          <FontAwesome5 name="angle-double-left" style={styles.icon(colors)} />
         </TouchableOpacity>
       )}
       <Image source={require('../assets/img/Logo.png')} style={styles.iconePata} />
@@ -69,14 +71,14 @@ export default function PIDHeader({ showBackButton = false, backButtonPress }) {
         {fotoPerfil ? (
           <Image source={{ uri: fotoPerfil }} style={styles.fotoPerfil} />
         ) : (
-          <FontAwesome5 name="user-alt" style={styles.icon} />
+          <FontAwesome5 name="user-alt" style={styles.icon(colors)} />
         )}
       </TouchableOpacity>
 
       <Modal transparent visible={visible} animationType="fade">
         <TouchableWithoutFeedback onPress={() => setVisible(false)}>
           <View style={styles.modalBackground}>
-            <SafeAreaView style={styles.popup}>
+            <SafeAreaView style={styles.popup(colors)}>
               {options.map((op, i) => (
                 <View key={i}>
                   <TouchableOpacity
@@ -84,17 +86,17 @@ export default function PIDHeader({ showBackButton = false, backButtonPress }) {
                     onPress={op.custom ? null : op.action}
                     activeOpacity={op.custom ? 1 : 0.7}
                   >
-                    <Text style={styles.optionText}>{op.title}</Text>
+                    <Text style={styles.optionText(colors)}>{op.title}</Text>
                     {op.custom && (
                       <Switch
                         value={theme === 'dark'}
                         onValueChange={toggleTheme}
-                        thumbColor={theme === 'dark' ? colors.colors.green : '#f4f3f4'}
-                        trackColor={{ false: '#767577', true: '#81b0ff' }}
+                        thumbColor={theme === 'dark' ? colors.green : colors.background}
+                        trackColor={{ false: colors.text, true: colors.text }}
                       />
                     )}
                   </TouchableOpacity>
-                  {i < options.length - 1 && <View style={styles.separator} />}
+                  {i < options.length - 1 && <View style={styles.separator(colors)} />}
                 </View>
               ))}
             </SafeAreaView>
@@ -106,16 +108,16 @@ export default function PIDHeader({ showBackButton = false, backButtonPress }) {
 }
 
 const styles = StyleSheet.create({
-  barraSuperior: {
+  barraSuperior: (colors)=>({
     width: '100%',
     height: 90,
     paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.colors.componentBG,
+    backgroundColor: colors.componentBG,
     elevation: 2,
-  },
+  }),
   iconePata: {
     width: 50,
     height: 50,
@@ -133,25 +135,25 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
   },
-  icon: {
+  icon: (colors)=>({
     fontSize: 24,
-    color: colors.colors.green,
-  },
+    color: colors.green,
+  }),
   modalBackground: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'transparent',
   },
-  popup: {
+  popup: (colors)=>({
     borderRadius: 8,
-    backgroundColor: colors.colors.componentBG,
+    backgroundColor: colors.componentBG,
     padding: 16,
     position: 'absolute',
     right: 10,
     top: 60,
     elevation: 5,
-  },
+  }),
   option: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -159,21 +161,21 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 8,
   },
-  optionText: {
-    fontFamily: fonts.families.light,
-    color: colors.colors.green,
+  optionText: (colors)=>({
+    fontFamily: fonts.families.medium,
+    color: colors.green,
     fontSize: 16,
-  },
+  }),
   backButton: {
     position: 'absolute',
     left: 10,
     padding: 10,
     top: 30,
   },
-  separator: {
+  separator: (colors)=>({
     height: 1,
-    backgroundColor: colors.colors.text,
+    backgroundColor: colors.text,
     opacity: 0.1,
     marginHorizontal: 8,
-  },
+  }),
 });

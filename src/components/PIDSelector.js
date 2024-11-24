@@ -2,6 +2,7 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import colors from '../styles/colors'; 
 import fonts from '../styles/fonts';
+import { useTheme } from '../context/ThemeContext';
 
 export default function PIDSelector({
   value,
@@ -9,8 +10,9 @@ export default function PIDSelector({
   items,
   placeholder,
   style,
-  withBottomBorder = false, // Nova propriedade
+  withBottomBorder = false,
 }) {
+  const { colors } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(value);
 
@@ -34,9 +36,9 @@ export default function PIDSelector({
     >
       <TouchableOpacity
         style={[
-          styles.selector,
-          withBottomBorder && !isOpen && styles.selectorWithBottomBorder,
-          isOpen && styles.selectorFocused,
+          styles.selector(colors),
+          withBottomBorder && !isOpen && styles.selectorWithBottomBorder(colors),
+          isOpen && styles.selectorFocused(colors),
         ]}
         onPress={toggleDropdown}
       >
@@ -46,14 +48,14 @@ export default function PIDSelector({
       </TouchableOpacity>
 
       {isOpen && (
-        <View style={styles.dropdownMenu}>
+        <View style={styles.dropdownMenu(colors)}>
           {items.map(item => (
             <TouchableOpacity
               key={item.value}
               style={styles.menuItem}
               onPress={() => handleSelect(item)}
             >
-              <Text style={styles.menuItemText}>{item.label}</Text>
+              <Text style={styles.menuItemText(colors)}>{item.label}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -65,27 +67,26 @@ export default function PIDSelector({
 const styles = StyleSheet.create({
   selectorContainer: {
     width: '100%',
-    marginBottom: 20,
     paddingVertical: 16,
   },
   selectorContainerWithBorder: {
     paddingVertical: 4,
   },
-  selector: {
+  selector: (colors) =>({
     height: 40,
     justifyContent: 'center',
     paddingHorizontal: 16,
-    backgroundColor: colors.colors.componentBG,
+    backgroundColor: colors.componentBG,
     borderRadius: 8,
-  },
-  selectorWithBottomBorder: {
+  }),
+  selectorWithBottomBorder: (colors) =>({
     borderBottomWidth: 2,
-    borderBottomColor: colors.colors.green,
-  },
-  selectorFocused: {
+    borderBottomColor: colors.green,
+  }),
+  selectorFocused: (colors) =>({
     borderWidth: 2,
-    borderColor: colors.colors.green,
-  },
+    borderColor: colors.green,
+  }),
   selectorText: {
     fontSize: fonts.size.medium,
     color: 'black',
@@ -93,17 +94,17 @@ const styles = StyleSheet.create({
   placeholderText: {
     color: 'gray',
   },
-  dropdownMenu: {
-    backgroundColor: colors.colors.componentBG,
+  dropdownMenu: (colors) =>({
+    backgroundColor: colors.componentBG,
     borderRadius: 8,
     elevation: 3,
     paddingHorizontal: 16,
-  },
+  }),
   menuItem: {
     paddingVertical: 12,
   },
-  menuItemText: {
+  menuItemText: (colors) =>({
     fontSize: fonts.size.medium,
-    color: colors.colors.text,
-  },
+    color: colors.text,
+  }),
 });
