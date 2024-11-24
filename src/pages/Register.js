@@ -25,6 +25,7 @@ export default function Register() {
   const [receberNotificacoes, setReceberNotificacoes] = useState(false);
 
   const handleCancel = () => navigation.navigate('Login');
+  const handleTermsOfUse = () => (navigation.navigate('TermsOfUse'), console.log("entrou"));
 
   const validateEmail = (email) => {
     const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -112,7 +113,7 @@ export default function Register() {
             title='Concordo com os' 
             checked={aceitaTermos} 
             onCheckChange={() => setAceitaTermos(!aceitaTermos)}> 
-            <PIDTextLink title='termos de uso' underlined onCheckChange={() => navigation.navigate('TermsOfUse')}/>
+            <PIDTextLink title='termos de uso' underlined onPress={handleTermsOfUse}/>
           </PIDCheckMarker>
         </View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '80%', paddingHorizontal: 20 }}>
@@ -138,4 +139,5 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     margin: 10,
 },
+  
 });

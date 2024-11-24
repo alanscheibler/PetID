@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { loginUser } from "../Services/userService";
 import { ActivityIndicator, View } from "react-native";
+import { useTheme } from '../context/ThemeContext';
 
 import ForgotPassword from "../pages/ForgotPassword";
 import Login from "../pages/Login";
@@ -15,12 +16,10 @@ import TelaInicialPet from "../pages/TelaInicialPet";
 import User from "../pages/User";
 import VaccinationCard from "../pages/VaccinationCard";
 import PetDetails from "../pages/PetDetails";
-import TermsOfUse from "../pages/TermsOfUse"; // Importando a página de Termos de Uso
-import colors from "../styles/colors";
+import TermsOfUse from "../pages/TermsOfUse";
 
 const AppStack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
-
 const AppNavigator = () => {
     return(
         <AppStack.Navigator>
@@ -59,6 +58,7 @@ const AppNavigator = () => {
 };
 
 const AuthNavigator = () => {
+  const { colors } = useTheme();
     return (
         <AuthStack.Navigator>
             <AuthStack.Screen
@@ -81,10 +81,14 @@ const AuthNavigator = () => {
                 component={TermsOfUse}
                 options={{
                     title: "Termos de Uso", 
+                    headerTitleStyle:{
+                      color: colors.green
+                    },
                     headerTitleAlign: 'center',
                     headerStyle: {
-                      backgroundColor: colors.colors.background,
+                      backgroundColor: colors.background,
                     },
+                    headerTintColor: colors.green,
                 }}
             />
         </AuthStack.Navigator>
