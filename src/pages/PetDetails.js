@@ -88,7 +88,6 @@ export default function PetDetails({ route }) {
     if (result.success) {
       Alert.alert('Dados do pet atualizados com sucesso!');
   
-      // Atualize o estado local com os novos valores
       setPet(data);
       setNome(data.nome);
       setEspecie(data.especie);
@@ -97,13 +96,10 @@ export default function PetDetails({ route }) {
       setSexo(data.sexo);
       setPetCastrado(data.petCastrado);
       setFotoPerfil(data.fotoPerfil);
-  
-      // Se for uma edição (petId existe), volte para a tela anterior
+
       if (petId) {
-        navigation.goBack(); // Ou redirecione para uma tela específica, por exemplo:
-        // navigation.navigate('TelaPet', { petId });
+        navigation.goBack();
       } else {
-        // Se for um novo pet, recarregue a tela com os dados atualizados
         const refreshedData = await getPetData(petId);
         if (refreshedData.success) {
           setPet(refreshedData.data);

@@ -26,9 +26,16 @@ export default function PIDHeader({ showBackButton = false, backButtonPress }) {
           console.error('Erro ao carregar dados do usuário:', result.message);
         }
       }
+
+     
     };
 
     loadUserProfile();
+
+    const refreshPhoto = setInterval(loadUserProfile, 1000);
+    return () => (
+      clearInterval(refreshPhoto)
+    );
   }, [user]);
 
   const handleLogout = async () => {
