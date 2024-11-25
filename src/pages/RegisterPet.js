@@ -57,21 +57,62 @@ export default function RegisterPet() {
 
   const handleRegister = async () => {
     try {
-      const petData = { nome, especie, raca, dataNascimento, sexo, petCastrado, fotoPerfil };
-      const result = await registerPet(petData);
+      const formatarDataParaBanco = (data) => {
+        const [dia, mes, ano] = data.split('/'); 
+        return `${ano}/${mes}/${dia}`;
+      };
+  
+      const validarData = (data) => {
+        const regex = /^\d{2}\/\d{2}\/\d{4}$/;
+        return regex.test(data);
+      };
+  
+      if (!validarData(dataNascimento)) {
+        Alert.alert('Erro', 'Por favor, informe a data de nascimento no formato DD/MM/AAAA.');
+        return;
+      }
+  
+      const dataAtual = new Date();
+      const [dia, mes, ano] = dataNascimento.split('/');
+      const dataNascimentoFormatada = new Date(`${ano}-${mes}-${dia}`);
+  
+      if (isNaN(dataNascimentoFormatada.getTime())) {
+        Alert.alert('Erro', 'Por favor, informe uma data de nascimento válida.');
+        return;
+      }
+  
+      if (dataNascimentoFormatada > dataAtual) {
+        Alert.alert('Erro', 'A data de nascimento não pode ser futura.');
+        return;
+      }
 
+      const dataNascimentoSalva = formatarDataParaBanco(dataNascimento);
+  
+      const petData = {
+        nome,
+        especie,
+        raca,
+        dataNascimento: dataNascimentoSalva,
+        sexo,
+        petCastrado,
+        fotoPerfil,
+      };
+  
+      const result = await registerPet(petData);
+  
       if (result.success) {
-        Alert.alert('Pet registrado com sucesso!');
+        Alert.alert('Sucesso', 'Pet registrado com sucesso!');
         navigation.goBack();
       } else {
-        console.error("Erro ao registrar o pet: ", result.error);
+        console.error('Erro ao registrar o pet:', result.error);
         Alert.alert('Erro', 'Não foi possível registrar o pet.');
       }
     } catch (error) {
-      console.log(error)
+      console.error(error);
+      Alert.alert('Erro', 'Ocorreu um erro inesperado. Tente novamente.');
     }
   };
-  
+
   return (
     <ScrollView style={styles.scrollContainer(colors)}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
