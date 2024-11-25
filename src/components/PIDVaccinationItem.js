@@ -7,9 +7,17 @@ import { useTheme } from '../context/ThemeContext';
 export default function PIDVaccinationItem({ vacina, onRefresh }) {
   const { colors } = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
+
+  const formatDate = (date) => {
+    if (!date) return null;
+    const [year, month, day] = date.split('-'); // Assume formato YYYY-MM-DD
+    return `${day}/${month}/${year}`;
+  };
+
   const openEditModal = () => {
     setModalVisible(true);
   };
+
   const closeModal = () => {
     setModalVisible(false);
   };
@@ -28,17 +36,17 @@ export default function PIDVaccinationItem({ vacina, onRefresh }) {
           </Text>
           <Text style={styles.itemText(colors)}>
             <Text style={styles.label}>Data de Realização: </Text>
-            {vacina.data_realizacao}
+            {formatDate(vacina.data_realizacao)}
           </Text>
           {vacina.data_renovacao && (
             <Text style={styles.itemText(colors)}>
               <Text style={styles.label}>Data de Renovação: </Text>
-              {vacina.data_renovacao}
+              {formatDate(vacina.data_renovacao)}
             </Text>
           )}
         </View>
         <TouchableOpacity onPress={openEditModal} style={styles.iconButton}>
-          <Ionicons name="pencil" style={styles.icon(colors)}/>
+          <Ionicons name="pencil" style={styles.icon(colors)} />
         </TouchableOpacity>
       </View>
 
@@ -80,8 +88,8 @@ const styles = StyleSheet.create({
   },
   icon: (colors) => ({
     fontSize: 24,
-    color: colors.green
-  }),  
+    color: colors.green,
+  }),
   iconButton: {
     padding: 5,
     marginLeft: 10,
