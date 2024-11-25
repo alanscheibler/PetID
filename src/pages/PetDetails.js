@@ -16,6 +16,7 @@ export default function PetDetails({ route }) {
   const { colors, theme } = useTheme();
   const navigation = useNavigation();
   const { petId } = route.params;
+  const isEdit = Boolean(petId);
 
   const [pet, setPet] = useState(null);
   const [nome, setNome] = useState('');
@@ -75,21 +76,45 @@ export default function PetDetails({ route }) {
 
   const salvarDados = async () => {
     let fotoUrl = fotoPerfil;
-
+  
     if (!fotoUrl) {
-      fotoUrl = pet.fotoPerfil;
+      fotoUrl = pet?.fotoPerfil || null;
     }
-
+  
     const data = { nome, especie, raca, dataNascimento, sexo, petCastrado, fotoPerfil: fotoUrl };
-    const result = await updatePetData(pet.id_pet, data);
-
+  
+    const result = await updatePetData(petId, data);
+  
     if (result.success) {
       Alert.alert('Dados do pet atualizados com sucesso!');
-      navigation.goBack();
+  
+      // Atualize o estado local com os novos valores
+      setPet(data);
+      setNome(data.nome);
+      setEspecie(data.especie);
+      setRaca(data.raca);
+      setDataNascimento(data.dataNascimento);
+      setSexo(data.sexo);
+      setPetCastrado(data.petCastrado);
+      setFotoPerfil(data.fotoPerfil);
+  
+      // Se for uma edição (petId existe), volte para a tela anterior
+      if (petId) {
+        navigation.goBack(); // Ou redirecione para uma tela específica, por exemplo:
+        // navigation.navigate('TelaPet', { petId });
+      } else {
+        // Se for um novo pet, recarregue a tela com os dados atualizados
+        const refreshedData = await getPetData(petId);
+        if (refreshedData.success) {
+          setPet(refreshedData.data);
+        }
+      }
     } else {
-      Alert.alert('Erro', result.error.message || 'Ocorreu um erro ao salvar os dados.');
+      Alert.alert('Erro', result.error?.message || 'Ocorreu um erro ao salvar os dados.');
     }
   };
+  
+
 
   const cancelarAlteracoes = () => {
     setNome(pet.nome);
