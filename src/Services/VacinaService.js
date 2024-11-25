@@ -4,8 +4,6 @@ export async function registerVacina(vacinaData) {
   const { procedimento, nome_proc, data_realizacao, data_renovacao, id_pet } = vacinaData;
 
   try {
-    console.log('Dados recebidos:', vacinaData);
-
     const { data: vacina, error: vacinaError } = await supabase
       .from('vacina')
       .insert([
@@ -25,7 +23,6 @@ export async function registerVacina(vacinaData) {
       throw vacinaError;
     }
 
-    console.log('Vacina registrada com sucesso:', vacina);
     return { success: true, vacina };
   } catch (error) {
     console.error('Erro ao registrar a vacina:', error);
@@ -61,7 +58,6 @@ export async function updateVacinaData(id_vacina, updateData) {
       return { success: false, error };
     }
 
-    console.log('Dados atualizados com sucesso:', data);
     return { success: true, data };
   } catch (error) {
     console.error('Erro ao atualizar vacina:', error.message);

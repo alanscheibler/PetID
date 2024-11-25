@@ -28,10 +28,8 @@ export default function User() {
   const [fotoPerfil, setFotoPerfil] = useState(null);
 
   useEffect(() => {
-    console.log(user)
     const loadUserData = async () => {
       const result = await getUserData(user.id_usuario);
-      console.log(result)
       if (result.success) {
         setUsuario(result.data);
         setNome(result.data.nome);

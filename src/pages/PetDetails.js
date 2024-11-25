@@ -11,12 +11,10 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useTheme } from '../context/ThemeContext';
 import { StatusBar } from 'expo-status-bar';
 
-
 export default function PetDetails({ route }) {
   const { colors, theme } = useTheme();
   const navigation = useNavigation();
   const { petId } = route.params;
-  const isEdit = Boolean(petId);
 
   const [pet, setPet] = useState(null);
   const [nome, setNome] = useState('');

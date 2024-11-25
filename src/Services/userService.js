@@ -87,19 +87,15 @@ export async function updateUserData(id_usuario, updateData) {
     .select();
 
   if (error) {
-    console.log("Erro ao atualizar dados:", error.message);
     return { success: false, error };
-   }
-      
-  console.log("Dados atualizados com sucesso:", data);
+  }
+
   return { success: true, data };
 }
 
 export async function uploadPhoto (uri, usuario) {
   const fileExt = uri.split('.').pop(); 
   const fileName = `${usuario.id_usuario}_foto.${fileExt}`; 
-
-  console.log(fileExt, fileName, uri)
 
   const response = await fetch(uri);
   const blob = await response.blob(); 

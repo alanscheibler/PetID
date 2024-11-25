@@ -25,7 +25,7 @@ export default function Register() {
   const [receberNotificacoes, setReceberNotificacoes] = useState(false);
 
   const handleCancel = () => navigation.navigate('Login');
-  const handleTermsOfUse = () => (navigation.navigate('TermsOfUse'), console.log("entrou"));
+  const handleTermsOfUse = () => (navigation.navigate('TermsOfUse'));
 
   const validateEmail = (email) => {
     const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -78,7 +78,6 @@ export default function Register() {
       Alert.alert(result.message, "Verifique seu email.");
       navigation.navigate('Login');
     } else {
-      console.log("Erro ao cadastrar:", result.message);
       Alert.alert("Erro ao cadastrar", result.message);
     }
   };

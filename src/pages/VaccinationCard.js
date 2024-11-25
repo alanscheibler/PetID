@@ -43,12 +43,8 @@ export default function VaccinationCard() {
     fetchPetData();
     fetchVacinas();
 
-    const refreshVaccine = setInterval(fetchVacinas, 1000);
-    const refreshPetData = setInterval(fetchPetData, 1000);
-    return () => (
-      clearInterval(refreshVaccine),
-      clearInterval(refreshPetData)
-    );
+    const intervalo = setInterval(fetchVacinas, 5000);
+    return () => clearInterval(intervalo);
   }, [petId]);
 
   const calculateAge = (birthDate) => {
@@ -93,8 +89,6 @@ export default function VaccinationCard() {
       data_renovacao: formatDate(data.dataReforco),
       id_pet: petId,
     };
-
-    console.log('Dados sendo enviados para o banco:', preparedData);
 
     const { success, vacina, error } = await registerVacina(preparedData);
 

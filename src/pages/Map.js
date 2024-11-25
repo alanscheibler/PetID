@@ -16,7 +16,6 @@ export default function Map() {
             (async () => {
                 let { status } = await Location.requestForegroundPermissionsAsync();
                 if (status !== 'granted') {
-                    console.log("Permissão de localização negada.");
                     return;
                 }
                 let location = await Location.getCurrentPositionAsync({});
@@ -31,7 +30,6 @@ export default function Map() {
     );
 
     const handleMapPress = (event) => {
-        console.log(event.nativeEvent);
         const { latitude, longitude } = event.nativeEvent.coordinate;
         setCustomMarkers((prevMarkers) => [
             ...prevMarkers,
