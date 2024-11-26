@@ -20,7 +20,6 @@
     "expo-location": "~18.0.1",
     "expo-splash-screen": "~0.29.10",
     "expo-status-bar": "~2.0.0",
-    "firebase": "^10.14.1",
     "install": "^0.13.0",
     "npm": "^10.9.0",
     "react": "18.3.1",
