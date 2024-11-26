@@ -43,8 +43,12 @@ export default function VaccinationCard() {
     fetchPetData();
     fetchVacinas();
 
-    const intervalo = setInterval(fetchVacinas, 5000);
-    return () => clearInterval(intervalo);
+    const refreshVaccines = setInterval(fetchVacinas, 1000);
+    const refreshPetData = setInterval(fetchPetData, 1000);
+    return () => (
+      clearInterval(refreshVaccines),
+      clearInterval(refreshPetData)
+    );
   }, [petId]);
 
   const calculateAge = (birthDate) => {
