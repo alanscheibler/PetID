@@ -73,6 +73,19 @@ export default function PetDetails({ route }) {
   };
 
   const salvarDados = async () => {
+    const hoje = new Date();
+    const dataNascimentoConvertida = new Date(dataNascimento);
+  
+    if (isNaN(dataNascimentoConvertida.getTime())) {
+      Alert.alert('Erro', 'Por favor, insira uma data de nascimento válida.');
+      return;
+    }
+  
+    if (dataNascimentoConvertida > hoje) {
+      Alert.alert('Erro', 'A data de nascimento não pode ser no futuro.');
+      return;
+    }
+  
     let fotoUrl = fotoPerfil;
   
     if (!fotoUrl) {
@@ -94,7 +107,7 @@ export default function PetDetails({ route }) {
       setSexo(data.sexo);
       setPetCastrado(data.petCastrado);
       setFotoPerfil(data.fotoPerfil);
-
+  
       if (petId) {
         navigation.goBack();
       } else {
@@ -107,8 +120,6 @@ export default function PetDetails({ route }) {
       Alert.alert('Erro', result.error?.message || 'Ocorreu um erro ao salvar os dados.');
     }
   };
-  
-
 
   const cancelarAlteracoes = () => {
     setNome(pet.nome);
