@@ -9,6 +9,7 @@ import { registerVacina, getVacinaData } from '../Services/VacinaService';
 import PIDVaccinationItem from '../components/PIDVaccinationItem'; 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useTheme } from '../context/ThemeContext';
+import { StatusBar } from 'expo-status-bar';
 
 export default function VaccinationCard() {
   const { colors, theme } = useTheme();

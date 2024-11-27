@@ -1,22 +1,89 @@
-import { StyleSheet, Text, View } from 'react-native';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import MapView, { Marker } from "react-native-maps";
-import React, { useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Alert } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import PIDHeader from '../components/PIDHeader';
+import { useTheme } from '../context/ThemeContext';
+import { StatusBar } from 'expo-status-bar';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Map() {
+    const { colors, theme } = useTheme();
     const navigation = useNavigation();
-    const [userLocation, setUserLocation] = useState(null);
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [customMarkers, setCustomMarkers] = useState([]);
     const backButtonPress = () => { navigation.navigate('TelaInicialPet') };
 
-    // Lista de marcadores fixos (clínicas ou locais de interesse)
+    const customMapStyle = [
+        {
+            "elementType": "geometry",
+            "stylers": [
+                {
+                    "color": colors.map.backgroundColor,
+                }
+            ]
+        },
+        {
+            "featureType": "road",
+            "elementType": "geometry",
+            "stylers": [
+                {
+                    "color": colors.map.roadColor,
+                }
+            ]
+        },
+        {
+            "featureType": "water",
+            "elementType": "geometry.fill",
+            "stylers": [
+                {
+                    "color": colors.map.waterColor,
+                }
+            ]
+        },
+        {
+            "featureType": "landscape",
+            "elementType": "geometry.fill",
+            "stylers": [
+                {
+                    "color": colors.map.landColor,
+                }
+            ]
+        },
+        {
+            "elementType": "labels.text.fill",
+            "stylers": [
+                {
+                    "color": colors.map.labelColor,
+                }
+            ]
+        },
+        {
+            "elementType": "labels.text.stroke",
+            "stylers": [
+                {
+                    "color": colors.map.labelOutline,
+                    "weight": 0,
+                }
+            ]
+        },
+        {
+            "elementType": "labels.icon",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        }
+    ];
+
     const fixedMarkers = [
         {
             id: 1,
             latitude: -28.267715693441726, 
             longitude: -52.41961974252445,
-            title: "Vittal Pet ",
+            title: "Vittal Pet",
             description: "Especializada em animais de pequeno porte."
         },
         {
@@ -98,63 +165,104 @@ export default function Map() {
         },
     ];
 
-    useFocusEffect(
-        useCallback(() => {
-            (async () => {
-                let { status } = await Location.requestForegroundPermissionsAsync();
-                if (status !== 'granted') {
-                    console.log("Permissão de localização negada.");
-                    return;
-                }
-                let location = await Location.getCurrentPositionAsync({});
-                setUserLocation({
-                    latitude: location.coords.latitude,
-                    longitude: location.coords.longitude,
-                    latitudeDelta: 0.05,
-                    longitudeDelta: 0.05,
-                });
-            })();
-        }, [])
-    );
+    const getCurrentLocation = async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+            setErrorMsg('Permissão de localização negada');
+            return;
+        }
+        let currentLocation = await Location.getCurrentPositionAsync({});
+        setLocation(currentLocation);
+    };
+
+    useEffect(() => {
+        getCurrentLocation();
+    }, []);
+
+    const initialRegion = location ? {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+    } : {
+        latitude: -23.55052,
+        longitude: -46.633308,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+    };
+
+    const handleMapPress = (event) => {
+        const { latitude, longitude } = event.nativeEvent.coordinate;
+        setCustomMarkers((prevMarkers) => [
+            ...prevMarkers,
+            { latitude, longitude },
+        ]);
+    };
+
+    if (errorMsg) {
+        Alert.alert('Erro', errorMsg);
+        return null;
+    }
 
     return (
         <View style={styles.container}>
+            <StatusBar 
+                style={theme === 'light' ? 'dark' : 'light'}
+                backgroundColor={colors.componentBG} 
+            />
             <PIDHeader
                 showBackButton
                 backButtonPress={backButtonPress}
             />
-            {userLocation ? (
-                <MapView
-                    provider='google'
-                    style={styles.map}
-                    initialRegion={userLocation}
-                >
-                    {/* Marcadores fixos */}
-                    {fixedMarkers.map((marker) => (
-                        <Marker
-                            key={marker.id}
-                            coordinate={{
-                                latitude: marker.latitude,
-                                longitude: marker.longitude,
-                            }}
-                            title={marker.title} 
-                            description={marker.description} 
-                        />
-                    ))}
-                </MapView>
-            ) : (
-                <Text>Carregando mapa...</Text>
-            )}
+            <MapView
+                style={styles.map}
+                region={initialRegion}
+                showsUserLocation={true}
+                followsUserLocation={true}
+                customMapStyle={customMapStyle}
+                onPress={handleMapPress}
+            >
+                {location && (
+                    <Marker
+                        coordinate={{
+                            latitude: location.coords.latitude,
+                            longitude: location.coords.longitude,
+                        }}
+                        title="Você está aqui"
+                        pinColor={colors.orange}
+                    />
+                )}
+                {fixedMarkers.map((marker) => (
+                    <Marker
+                        key={marker.id}
+                        coordinate={{
+                            latitude: marker.latitude,
+                            longitude: marker.longitude,
+                        }}
+                        title={marker.title}
+                        description={marker.description}
+                        pinColor={colors.green}
+                    />
+                ))}
+                {customMarkers.map((marker, index) => (
+                    <Marker
+                        key={index}
+                        coordinate={{
+                            latitude: marker.latitude,
+                            longitude: marker.longitude,
+                        }}
+                        title="Novo Marcador"
+                        pinColor={colors.orange}
+                    />
+                ))}
+            </MapView>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        alignItems: "center",
-        justifyContent: "center",
+        flex: 1, 
     },
     map: {
         flex: 1,
