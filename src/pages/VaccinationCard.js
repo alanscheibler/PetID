@@ -123,6 +123,10 @@ export default function VaccinationCard() {
 
   return (
     <View style={styles.container(colors)}>
+      <StatusBar 
+            style={theme === 'light' ? 'dark' : 'light'}
+            backgroundColor={colors.background} 
+        /> 
       <PIDHeader showBackButton backButtonPress={backButtonPress} />
       <ScrollView style={styles.vaccineListContainer} contentContainerStyle={styles.scrollViewContent}>
         <TouchableOpacity style={styles.petCardContainer(colors)} onPress={handlePetCardPress}>
